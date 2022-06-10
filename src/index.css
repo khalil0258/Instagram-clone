@@ -22,6 +22,10 @@ body {
 .modal {
   position: relative;
 }
+/* ki tji cnx ndirha */
+/* .PostSetings {
+  @apply w-[80%] sm:w-[400px] bg-white rounded-md border-global border-opacity-10 absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%];
+} */
 .modal::after {
   content: "";
   height: 0px;
@@ -37,6 +41,20 @@ body {
 
   right: 3px;
   z-index: 1200;
+}
+.loadingAnimation {
+  animation-duration: 1s;
+  animation-name: loading;
+  animation-iteration-count: infinite;
+}
+@keyframes loading {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",

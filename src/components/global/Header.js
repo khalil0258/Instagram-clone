@@ -9,7 +9,7 @@ import ProfileIcon from "./ProfileIcon";
 function Header() {
   const [img, setImg] = useState(true);
   return (
-    <nav className="bg-white py-3 px-[20px] border border-b-[2px] border-slate-200">
+    <nav className="bg-white py-1 px-[20px] border border-b-[2px] border-slate-200 fixed top-0 left-0 right-0">
       {/* header container that making him in the middle */}
       <HeaderContainer>
         <div className="flex items-center justify-between ">
@@ -45,7 +45,7 @@ function Header() {
           {/* navigation icons section  */}
           <div id="navIcons" className="flex items-center ml-20">
             <div className="mr-6 cursor-pointer">
-              <HomeIcon sx={{ height: "33px", width: "33px" }} />
+              <HomeIcon sx={{ height: "27px", width: "27px" }} />
             </div>
             <div className="mr-6 cursor-pointer relative ">
               <img
@@ -56,14 +56,14 @@ function Header() {
               <span className="spanIcon">1</span>
             </div>
             <div className="mr-6 cursor-pointer">
-              <AddBoxOutlinedIcon sx={{ height: "33px", width: "33px" }} />
+              <AddBoxOutlinedIcon sx={{ height: "27px", width: "27px" }} />
             </div>
             <div className="mr-6 cursor-pointer">
-              <ExploreOutlinedIcon sx={{ height: "33px", width: "33px" }} />
+              <ExploreOutlinedIcon sx={{ height: "27px", width: "27px" }} />
             </div>
             <div className="mr-6 cursor-pointer">
               <FavoriteBorderOutlinedIcon
-                sx={{ height: "33px", width: "33px" }}
+                sx={{ height: "27px", width: "27px" }}
               />
             </div>
             <div>

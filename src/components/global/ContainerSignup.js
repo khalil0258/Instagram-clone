@@ -23,7 +23,8 @@ export const HeaderContainer = ({ children }) => {
 
 const HeaderContain = styled.div`
   width: 90%;
-  max-width: calc(935px + 40px);
+  max-width: calc(935px);
+  /* background-color: red; */
   /* max-width: 821px; */
   height: auto;
   position: relative;

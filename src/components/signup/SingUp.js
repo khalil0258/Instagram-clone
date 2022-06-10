@@ -15,8 +15,9 @@ import {
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
-import { auth, facebookProvider } from "../../Firebase/Firebase";
+import { auth, db, facebookProvider } from "../../Firebase/Firebase";
 import { async } from "@firebase/util";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 function SingUp() {
   const pic = ["pic", "pic2", "pic3", "pic4"];
@@ -48,10 +49,27 @@ function SingUp() {
         values.passwordS
       ).then((res) => {
         updateProfile(auth.currentUser, {
-          displayName: values.name,
-        }).then(() => {
-          dispatch(loginWithEmail({ user2: res.user, authenticated: !!res }));
-        });
+          displayName: { userName: values.userName, name: values.name },
+        })
+          .then(async () => {
+            const user = res.user;
+            const docRef = await getDoc(doc(db, "users", user.uid));
+            if (!docRef.exists()) {
+              await setDoc(doc(db, "users", user.uid), {
+                userName: user.displayName,
+                email: user.email,
+                name: user.displayName,
+                followers: [],
+                followed: [],
+                profileDescription: "",
+                searches: [],
+                profileImage: user.photoURL || "",
+              });
+            }
+          })
+          .then(() => {
+            dispatch(loginWithEmail({ user2: res.user, authenticated: !!res }));
+          });
       });
     },
   });
@@ -87,14 +105,28 @@ function SingUp() {
   });
   const facebookSign = async () => {
     await signInWithPopup(auth, facebookProvider)
-      .then((result) => {
+      .then(async (result) => {
         // The signed-in user info.
         const user = result.user;
         console.log(user);
-
+      
         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
         // const credential = FacebookAuthProvider.credentialFromResult(result);
         // const accessToken = credential.accessToken;
+        const docRef = await getDoc(doc(db, "users", user.uid));
+        if (!docRef.exists()) {
+          await setDoc(doc(db, "users", user.uid), {
+            userName: user.displayName,
+            email: user.email,
+            name: user.displayName,
+            followers: [],
+            followed: [],
+            profileDescription: "",
+            searches: [],
+            profileImage: user.photoURL || "",
+          });
+        }
+
         dispatch(loginWithEmail({ user2: user, authenticated: !!result }));
       })
       .catch((error) => {

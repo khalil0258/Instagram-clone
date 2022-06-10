@@ -9,10 +9,12 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../Firebase/Firebase";
 import { setLoading } from "../../features/auth-state/auth-slice";
 
-const BackDrop = (props) => {
+export const BackDrop = (props) => {
   return (
     <div
-      className="h-screen w-screen  absolute top-0 "
+      className={`h-screen w-screen  fixed top-0 bottom-0 ${
+        props.back && "bg-black bg-opacity-40"
+      }`}
       style={{ display: props.open ? "block" : "none", zIndex: 100 }}
       onClick={() => {
         props.clicked();
@@ -21,22 +23,27 @@ const BackDrop = (props) => {
   );
 };
 function MenuModal(props) {
-  if (!props.open) return null;
-  else {
+  if (!props.open) {
+    document.body.style.overflowY = "scroll";
+    return null;
+  } else {
+    console.log(props.open);
+    document.body.style.overflowY = "hidden";
     return (
       <Fragment>
         {ReactDOM.createPortal(
-          <BackDrop clicked={props.clicked} open={props.open} />,
+          <BackDrop clicked={props.clicked} open={props.open} back />,
           document.getElementById("backdrop")
         )}
+
         {ReactDOM.createPortal(
           <HeaderContainer>
-            <div className="modal">
+            <div>
               <div
                 style={{ zIndex: 1200 }}
-                className=" absolute -right-8 -top-1 -shadow-md  shadow-gray-400 drop-shadow-md  overflow-hidden w-56 rounded-md "
+                className=" fixed right-40 top-14 -shadow-md  shadow-gray-400 drop-shadow-md  overflow-hidden w-56 rounded-md "
               >
-                <div className="bg-white ">
+                <div className="bg-white modal">
                   <ul>
                     <li className="flex p-2 hover:bg-gray-200 cursor-pointer">
                       <PermIdentityOutlinedIcon />
@@ -68,7 +75,7 @@ function MenuModal(props) {
               </div>
             </div>
           </HeaderContainer>,
-          document.getElementById("modal")
+          document.getElementById("ProfileSetingsmodal")
         )}
       </Fragment>
     );
