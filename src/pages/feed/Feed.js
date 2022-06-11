@@ -24,7 +24,7 @@ function Feed() {
         setUserData(res);
       })
       .then(() => {
-        console.log("data", userData);
+        // console.log("data", userData);
       });
   }, []);
 

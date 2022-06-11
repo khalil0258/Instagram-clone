@@ -27,7 +27,7 @@ function MenuModal(props) {
     document.body.style.overflowY = "scroll";
     return null;
   } else {
-    console.log(props.open);
+    // console.log(props.open);
     document.body.style.overflowY = "hidden";
     return (
       <Fragment>

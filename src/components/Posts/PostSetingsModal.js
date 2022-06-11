@@ -23,6 +23,7 @@ const PostSetings = ({ postSetings }) => {
 };
 
 function PostSetingsModal(props) {
+//   console.log(props.open);
   if (!props.open) {
     document.body.style.overflowY = "scroll";
     return null;

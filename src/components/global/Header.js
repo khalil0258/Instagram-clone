@@ -5,9 +5,14 @@ import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ProfileIcon from "./ProfileIcon";
+import AddPost from "./AddPost";
 
 function Header() {
   const [img, setImg] = useState(true);
+  const [showImgAdder, setshowImgAdder] = useState(false);
+  const clicked = () => {
+    setshowImgAdder(false);
+  };
   return (
     <nav className="bg-white py-1 px-[20px] border border-b-[2px] border-slate-200 fixed top-0 left-0 right-0">
       {/* header container that making him in the middle */}
@@ -55,7 +60,12 @@ function Header() {
               />
               <span className="spanIcon">1</span>
             </div>
-            <div className="mr-6 cursor-pointer">
+            <div
+              className="mr-6 cursor-pointer"
+              onClick={() => {
+                setshowImgAdder(true);
+              }}
+            >
               <AddBoxOutlinedIcon sx={{ height: "27px", width: "27px" }} />
             </div>
             <div className="mr-6 cursor-pointer">
@@ -71,6 +81,7 @@ function Header() {
             </div>
           </div>
         </div>
+        <AddPost clicked={clicked} open={showImgAdder} />
       </HeaderContainer>
     </nav>
   );

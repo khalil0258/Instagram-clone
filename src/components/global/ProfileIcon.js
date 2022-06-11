@@ -9,7 +9,7 @@ function ProfileIcon() {
     setShowMenu(false);
   };
   const imgUrl = useSelector(userDetail);
-  console.log(imgUrl);
+  // console.log(imgUrl);
   return (
     <div className="">
       {/* Khassni ndir hadak menu b portal bach ki nekliki f screen temchi */}
