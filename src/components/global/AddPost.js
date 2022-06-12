@@ -24,7 +24,7 @@ const ShowImg = (props) => {
   }, []);
   console.log(imgg);
   return (
-    <div>
+    <div className="w-[70%] sm:w-[420px] bg-white">
       <div className="p-3 flex justify-between items-center">
         <ArrowBackIcon
           className="cursor-pointer"
@@ -69,7 +69,7 @@ const AddImg = () => {
   };
   return (
     <div
-      className="bg-white fixed top-[50%] left-[50%] transform -translate-x-[50%] -translate-y-[50%] w-[70%] sm:w-[420px] rounded-md "
+      className=" fixed top-[50%] left-[50%] transform -translate-x-[50%] -translate-y-[50%]  rounded-md "
       style={{ zIndex: 200 }}
     >
       {!img ? (
@@ -77,7 +77,7 @@ const AddImg = () => {
       ) : !last ? (
         <ShowImg img={img} imageSetter={imageSetter} lastSetter={lastSetter} />
       ) : (
-        <DescriptionSection />
+        <DescriptionSection img={img} />
       )}
     </div>
   );

@@ -3,8 +3,8 @@ import addImg from "../../assets/icons/addImg.svg";
 
 function AddingImg({ imageSetter }) {
   return (
-    <div>
-      <div className="text-center py-2 border-b border-b-black border-opacity-25 ">
+    <div className="bg-white">
+      <div className="text-center py-2 border-b border-b-black border-opacity-25 w-[70%] sm:w-[420px] bg-white ">
         <h4 className="font-medium ">Créer une nouvelle publication</h4>
       </div>
       <div className=" pt-6 pb-2 flex flex-col items-center ">
