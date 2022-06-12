@@ -56,7 +56,7 @@ const ShowImg = (props) => {
 };
 
 // add img section
-const AddImg = () => {
+const AddImg = (props) => {
   const [img, setImg] = useState();
   const [last, setLast] = useState(false);
   const user = useSelector(userDetail);
@@ -77,7 +77,11 @@ const AddImg = () => {
       ) : !last ? (
         <ShowImg img={img} imageSetter={imageSetter} lastSetter={lastSetter} />
       ) : (
-        <DescriptionSection img={img} />
+        <DescriptionSection
+          img={img}
+          lastSetter={lastSetter}
+          clicked={props.clicked}
+        />
       )}
     </div>
   );
@@ -97,7 +101,7 @@ function AddPost(props) {
           document.getElementById("backdrop")
         )}
         {ReactDOM.createPortal(
-          <AddImg />,
+          <AddImg clicked={props.clicked} />,
           document.getElementById("Othermodals")
         )}
       </div>

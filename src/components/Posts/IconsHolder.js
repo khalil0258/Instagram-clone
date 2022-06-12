@@ -6,7 +6,7 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 
 function IconsHolder() {
   const [liked, setLiked] = useState(false);
-  
+
   return (
     <div className="px-3 ">
       <div className="flex  items-center justify-between py-2">
@@ -31,8 +31,13 @@ function IconsHolder() {
       <div className="text-left pb-1">
         <p>
           Aime par
-          <span className="text-[15px] font-medium cursor-pointer">ddd</span>et
-          <span className="text-[15px] font-medium cursor-pointer">dddj</span>
+          <span className="text-[15px] font-medium cursor-pointer mx-1">
+            {/* {firstLikes} */}
+          </span>
+          et
+          <span className="text-[15px] font-medium cursor-pointer mx-1">
+            autre personnes
+          </span>
         </p>
       </div>
     </div>

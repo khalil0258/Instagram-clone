@@ -7,7 +7,7 @@ function CommentBefore({ name, description, inComment }) {
       className={`flex items-center justify-between   ${inComment && "px-4"}`}
     >
       <div className="flex items-center justify-start">
-        <h3 className="text-[15px] font-medium cursor-pointer">{name}</h3>
+        <h3 className="text-[15px] font-medium cursor-pointer mr-1">{name}</h3>
         <p>{description}</p>
       </div>
       {inComment && (
