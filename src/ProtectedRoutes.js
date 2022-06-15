@@ -6,6 +6,7 @@ import useAuth from "./use-Auth";
 
 function ProtectedRoutes({ isAuth: isAuth, loading: loading }) {
   // const Auth = useAuth();
+
   if (!isAuth) {
     return <Navigate to="/" />;
   }

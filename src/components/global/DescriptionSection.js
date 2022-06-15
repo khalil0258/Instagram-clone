@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useSelector } from "react-redux";
 import { userDetail } from "../../features/auth-state/auth-slice";
-import { addDoc, doc } from "firebase/firestore";
+import { addDoc, collection, doc } from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../../Firebase/Firebase";
 
@@ -22,23 +22,26 @@ function DescriptionSection(props) {
     };
     fReader.readAsDataURL(props.img);
   }, []);
-  const uploadImg = () => {
+  const uploadImg = async () => {
     if (props.img == null) return alert("error");
-    alert("imgAded");
+    // alert("imgAded");
 
-    // const imageRef = ref(storage, `users/${user.uid}/posts/${props.img.name}`);
-    // uploadBytes(imageRef, props.img)
-    //   .then(() => {
-    //     addDoc(doc(db, "users", user.uid, "posts"), {
-    //       likes: [],
-    //       imageUrl: props.img,
-    //       description: description,
-    //       location: inputPlace,
-    //     });
-    //   })
-    //   .then(() => {
-    //     props.clicked();
-    //   });
+    const imageRef = ref(storage, `users/${user.uid}/posts/${props.img.name}`);
+    await uploadBytes(imageRef, props.img)
+      .then(async () => {
+        await addDoc(collection(db, "users", user.uid, "posts"), {
+          likes: [],
+          imageUrl: props.img.name || "",
+          description: description || "",
+          location: inputPlace || "",
+        }).then(() => {
+          alert("imgAdded");
+          props.clicked();
+        });
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
   };
   return (
     <div className=" w-[90%] sm:w-[730px] mx-auto bg-white h-[70vh] overflow-hidden rounded-2xl">
@@ -62,7 +65,7 @@ function DescriptionSection(props) {
       </div>
       <div className="flex gap-2 h-[65vh] overflow-hidden ">
         <div className="h-[65vh] w-[50%] sm:w-[470px]">
-          <img src={imgg} alt="" className="h-full  " />
+          <img src={imgg} alt="" className="h-full mx-auto " />
         </div>
         {/* the card main section  */}
         <div className="w-1/2 border-l border-l-black border-opacity-10 overflow-y-scroll ">

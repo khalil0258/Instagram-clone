@@ -22,7 +22,7 @@ const ShowImg = (props) => {
     };
     fReader.readAsDataURL(props.img);
   }, []);
-  console.log(imgg);
+  // console.log(imgg);
   return (
     <div className="w-[70%] sm:w-[420px] bg-white">
       <div className="p-3 flex justify-between items-center">
@@ -88,7 +88,7 @@ const AddImg = (props) => {
 };
 
 function AddPost(props) {
-  console.log(props.open, props.clicked);
+  // console.log(props.open, props.clicked);
 
   if (!props.open) {
     document.body.style.overflowY = "scroll";

@@ -49,7 +49,7 @@ function SingUp() {
         values.passwordS
       ).then((res) => {
         updateProfile(auth.currentUser, {
-          displayName: { userName: values.userName, name: values.name },
+          displayName: values.userName,
         })
           .then(async () => {
             const user = res.user;
@@ -59,11 +59,13 @@ function SingUp() {
                 userName: user.displayName,
                 email: user.email,
                 name: user.displayName,
+                // not sure if i let arrays or i make them a subcollection
                 followers: [],
                 followed: [],
                 profileDescription: "",
                 searches: [],
                 profileImage: user.photoURL || "",
+                userId: user.uid,
               });
             }
           })
@@ -109,7 +111,7 @@ function SingUp() {
         // The signed-in user info.
         const user = result.user;
         console.log(user);
-      
+
         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
         // const credential = FacebookAuthProvider.credentialFromResult(result);
         // const accessToken = credential.accessToken;
@@ -124,6 +126,7 @@ function SingUp() {
             profileDescription: "",
             searches: [],
             profileImage: user.photoURL || "",
+            userId: user.uid,
           });
         }
 

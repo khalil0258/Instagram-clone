@@ -7,6 +7,7 @@ import { userDetail } from "../../features/auth-state/auth-slice";
 import Posts from "../../components/Posts/Posts";
 import Suggested from "../../components/Suggested";
 import { doc, getDoc } from "firebase/firestore";
+import HeaderHolder from "../../components/global/HeaderHolder";
 // import Post from "../../components/Posts/Post";
 
 function Feed() {
@@ -29,15 +30,10 @@ function Feed() {
   }, []);
 
   return (
-    <div
-    // onClick={() => {
-    //   signOut(auth);
-    // }}
-    >
-      <Header />
+    <HeaderHolder>
       <div
         id="mainContent"
-        className="flex justify-start items-start gap-2  w-[90%] mx-auto max-w-[890px] mt-24  "
+        className="flex justify-start items-start gap-2  w-[90%] mx-auto max-w-[890px]   "
       >
         <div className=" w-[90%] mx-auto sm:max-w-[400px] md:max-w-[470px]  ">
           <Posts />
@@ -68,7 +64,7 @@ function Feed() {
           <Suggested />
         </div>
       </div>
-    </div>
+    </HeaderHolder>
   );
 }
 

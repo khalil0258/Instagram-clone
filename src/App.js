@@ -20,6 +20,7 @@ import {
   setLoading,
 } from "./features/auth-state/auth-slice";
 import Loading from "./components/global/Loading";
+import Profile from "./pages/profile/Profile";
 
 function App() {
   const isAuth = useAuth();
@@ -58,6 +59,7 @@ function App() {
           element={<ProtectedRoutes isAuth={isAuth} loading={loading} />}
         >
           <Route path="feed" element={<Feed />} exact />
+          <Route path=":id" element={<Profile />} exact />
         </Route>
       </Routes>
     </div>

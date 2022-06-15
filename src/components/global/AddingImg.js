@@ -23,7 +23,7 @@ function AddingImg({ imageSetter }) {
             id="fileAdder"
             onInput={(e) => {
               imageSetter(e.target.files[0]);
-              console.log(e.target.files.fullName);
+              console.log(e.target.files[0]);
 
               //   if (img == null) return alert("error");
 

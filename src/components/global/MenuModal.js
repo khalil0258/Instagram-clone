@@ -7,7 +7,10 @@ import ReactDOM from "react-dom";
 import { HeaderContainer } from "./ContainerSignup";
 import { signOut } from "firebase/auth";
 import { auth } from "../../Firebase/Firebase";
-import { setLoading } from "../../features/auth-state/auth-slice";
+import { setLoading, userDetail } from "../../features/auth-state/auth-slice";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setProfileId } from "../../features/profileSlice/Profile-Slice";
 
 export const BackDrop = (props) => {
   return (
@@ -23,16 +26,17 @@ export const BackDrop = (props) => {
   );
 };
 function MenuModal(props) {
+  const dispatch = useDispatch();
+  const user = useSelector(userDetail);
   if (!props.open) {
-    document.body.style.overflowY = "scroll";
     return null;
   } else {
     // console.log(props.open);
-    document.body.style.overflowY = "hidden";
+
     return (
       <Fragment>
         {ReactDOM.createPortal(
-          <BackDrop clicked={props.clicked} open={props.open} back />,
+          <BackDrop clicked={props.clicked} open={props.open} />,
           document.getElementById("backdrop")
         )}
 
@@ -45,10 +49,17 @@ function MenuModal(props) {
               >
                 <div className="bg-white modal">
                   <ul>
-                    <li className="flex p-2 hover:bg-gray-200 cursor-pointer">
-                      <PermIdentityOutlinedIcon />
-                      <p className="ml-3 font-light ">Profile</p>
-                    </li>
+                    <Link
+                      to={`/${user.displayName}`}
+                      onClick={() => {
+                        dispatch(setProfileId({ id: user.uid }));
+                      }}
+                    >
+                      <li className="flex p-2 hover:bg-gray-200 cursor-pointer">
+                        <PermIdentityOutlinedIcon />
+                        <p className="ml-3 font-light ">Profile</p>
+                      </li>
+                    </Link>
                     <li className="flex p-2 hover:bg-gray-200 cursor-pointer">
                       <BookmarkBorderOutlinedIcon />
                       <p className="ml-3 font-light  ">Enregistre</p>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { userDetail } from "../../features/auth-state/auth-slice";
 
 import MenuModal from "./MenuModal";
@@ -8,8 +9,8 @@ function ProfileIcon() {
   const clicked = () => {
     setShowMenu(false);
   };
-  const imgUrl = useSelector(userDetail);
-  // console.log(imgUrl);
+  const user = useSelector(userDetail);
+  // console.log(user);
   return (
     <div className="">
       {/* Khassni ndir hadak menu b portal bach ki nekliki f screen temchi */}
@@ -21,11 +22,13 @@ function ProfileIcon() {
           setShowMenu(!showMenu);
         }}
       >
-        {imgUrl?.photoURL ? (
-          <img src={imgUrl.photoURL} alt="" className="h-7 w-7 rounded-3xl" />
-        ) : (
-          <div className="h-7 w-7 rounded-3xl bg-gray-100"></div>
-        )}
+        
+          {user?.photoURL ? (
+            <img src={user.photoURL} alt="" className="h-7 w-7 rounded-3xl" />
+          ) : (
+            <div className="h-7 w-7 rounded-3xl bg-gray-100"></div>
+          )}
+       
       </div>
 
       <MenuModal open={showMenu} clicked={clicked} />

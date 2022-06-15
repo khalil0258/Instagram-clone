@@ -27,6 +27,6 @@ const HeaderContain = styled.div`
   /* background-color: red; */
   /* max-width: 821px; */
   height: auto;
-  position: relative;
+  
   margin: 0 auto;
 `;
