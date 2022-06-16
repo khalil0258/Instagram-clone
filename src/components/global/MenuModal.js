@@ -52,7 +52,7 @@ function MenuModal(props) {
                     <Link
                       to={`/${user.displayName}`}
                       onClick={() => {
-                        dispatch(setProfileId({ id: user.uid }));
+                        dispatch(setProfileId({ id: user.id }));
                       }}
                     >
                       <li className="flex p-2 hover:bg-gray-200 cursor-pointer">

@@ -70,7 +70,17 @@ function SingUp() {
             }
           })
           .then(() => {
-            dispatch(loginWithEmail({ user2: res.user, authenticated: !!res }));
+            dispatch(
+              loginWithEmail({
+                user2: {
+                  displayName: res.user.displayName,
+                  id: res.user.uid,
+                  email: res.user.email,
+                  photoURL: res.user.photoURL,
+                },
+                authenticated: !!res,
+              })
+            );
           });
       });
     },
@@ -93,7 +103,15 @@ function SingUp() {
           // console.log("user", user);
           // console.log("userCredential", userCredential);
           dispatch(
-            loginWithEmail({ user2: user, authenticated: !!userCredential })
+            loginWithEmail({
+              user2: {
+                displayName: user.displayName,
+                id: user.uid,
+                email: user.email,
+                photoURL: user.photoURL,
+              },
+              authenticated: !!userCredential,
+            })
           );
           // console.log(!!res);
           // ...

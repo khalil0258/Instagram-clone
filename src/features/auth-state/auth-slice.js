@@ -14,7 +14,7 @@ export const Auth_Slice = createSlice({
   reducers: {
     loginWithEmail: (state, action) => {
       //   console.log(action.payload);
-      state.user = action.payload.user2;
+      state.user = { ...action.payload.user2 };
       state.authenticated = action.payload.authenticated;
     },
     logout: (state) => {

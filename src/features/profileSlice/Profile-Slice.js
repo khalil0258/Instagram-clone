@@ -18,6 +18,7 @@ export const ProfileSlice = createSlice({
     },
     setComponentLoading: (state, action) => {
       state.loading = action.payload;
+      
     },
   },
 });

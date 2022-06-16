@@ -1,9 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import { HeaderContainer } from "../global/ContainerSignup";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-function InformationSection({ userState, followed }) {
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../Firebase/Firebase";
+import { useSelector } from "react-redux";
+import { userDetail } from "../../features/auth-state/auth-slice";
+function InformationSection({ userState, followed, infos }) {
+  const user = useSelector(userDetail);
+  console.log(infos);
   return (
     <div>
       <HeaderContainer>
@@ -11,7 +17,10 @@ function InformationSection({ userState, followed }) {
           {/* the right section of the information section which shows the profile pic */}
           <div className="min-w-[100px] md:w-1/3  flex justify-center items-center">
             <img
-              src={require("../../assets/signupAssets/my.jpg")}
+              src={
+                (infos && infos?.profileImage) ||
+                require("../../assets/signupAssets/my.jpg")
+              }
               alt="profile image"
               className=" h-3/5  object-cover rounded-full md:h-full"
             />
@@ -20,7 +29,7 @@ function InformationSection({ userState, followed }) {
           <div className="text-left pl-4 ">
             {/* the above section that shows the profile name */}
             <div className="flex justify-start items-center mb-6">
-              <h2 className="text-lg mr-12 ">khalil_____hjz</h2>
+              <h2 className="text-lg mr-12 ">{infos && infos?.userName}</h2>
               {userState ? (
                 // profile of the user
                 <CurrentUser />
@@ -29,24 +38,28 @@ function InformationSection({ userState, followed }) {
                 <Followed />
               ) : (
                 // profile of not followed user
-                <NotFollowed />
+                <NotFollowed id={infos.userId} user={user} />
               )}
             </div>
             {/* section that shows the followers and the following and the posts number */}
             <div className="flex items-center">
               {/* posts number  */}
               <div className="font-normal text-md mr-14">
-                <span className="font-medium text-[16px] mr-1">22</span>
+                <span className="font-medium text-[16px] mr-1">1</span>
                 posts
               </div>
               {/* followers number  */}
               <div className="font-normal text-md mr-14">
-                <span className="font-medium text-[16px] mr-1">22</span>
+                <span className="font-medium text-[16px] mr-1">
+                  {infos && infos?.followers?.length}
+                </span>
                 followers
               </div>
               {/* following number  */}
               <div className="font-normal text-md mr-14">
-                <span className="font-medium text-[16px] mr-1">22</span>
+                <span className="font-medium text-[16px] mr-1">
+                  {infos && infos?.followed?.length}
+                </span>
                 following
               </div>
             </div>
@@ -95,11 +108,39 @@ const CurrentUser = () => {
     </div>
   );
 };
-const NotFollowed = () => {
+const NotFollowed = (props) => {
+  const [follow, setFollow] = useState();
+  const fetchFollow = async () => {
+    const docum = await getDoc(doc(db, "users", props.user.id));
+    return docum.data();
+  };
+
+  useEffect(() => {
+    fetchFollow().then((res) => {
+      if (res?.followers.includes(props.id)) {
+        setFollow(true);
+      } else {
+        setFollow(false);
+      }
+    });
+  }, []);
   return (
     <div className="flex  ">
-      <button className=" capitalize  mr-2 text-xs px-4 font-medium bg-blue-500 text-white  rounded-sm ">
-        follow
+      <button
+        className={`capitalize  mr-2 text-xs px-4 font-medium   rounded-sm outline-none ${
+          follow
+            ? "bg-white text-black border border-opacity-20"
+            : "bg-blue-500 text-white"
+        }`}
+        onClick={async () => {
+          if (follow == false) {
+            setFollow(true);
+            // update doc .array de followers
+          }
+          console.log("clickd");
+        }}
+      >
+        {follow ? "Infollow" : "follow"}
       </button>
 
       <button className="px-1 capitalize  mr-2 text-sm font-medium bg-blue-500 text-white  rounded-sm ">

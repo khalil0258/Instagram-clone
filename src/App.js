@@ -33,7 +33,17 @@ function App() {
           // User is signed in, see docs for a list of available properties
           // https://firebase.google.com/docs/reference/js/firebase.User
 
-          dispatch(loginWithEmail({ user2: user, authenticated: true }));
+          dispatch(
+            loginWithEmail({
+              user2: {
+                displayName: user.displayName,
+                id: user.uid,
+                email: user.email,
+                photoURL: user.photoURL,
+              },
+              authenticated: true,
+            })
+          );
           dispatch(setLoading(false));
         } else {
           // User is signed out

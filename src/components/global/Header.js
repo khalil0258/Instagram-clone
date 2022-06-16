@@ -29,7 +29,7 @@ function Header() {
     const q = query(collection(db, "users"), where("userName", ">=", inpute));
     let users = [];
     const data = await getDocs(q);
-    console.log(data);
+    // console.log(data);
     data.forEach((res) => {
       users.push(res.data());
     });
@@ -73,7 +73,7 @@ function Header() {
                 setSearch(true);
                 setInpute(e.target.value);
                 fetchSearched().then((res) => {
-                  console.log(res);
+                  // console.log(res);
                   setUsers([...res]);
                 });
               }}

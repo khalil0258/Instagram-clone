@@ -12,7 +12,7 @@ import HeaderHolder from "../../components/global/HeaderHolder";
 
 function Feed() {
   const user = useSelector(userDetail);
-  const [userData, setUserData] = useState();
+  const [userData, setUserData] = useState({});
   // console.log("user", user);
   useEffect(() => {
     const fetchData = async () => {
