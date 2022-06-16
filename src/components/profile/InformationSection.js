@@ -3,7 +3,13 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import { HeaderContainer } from "../global/ContainerSignup";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../Firebase/Firebase";
 import { useSelector } from "react-redux";
 import { userDetail } from "../../features/auth-state/auth-slice";
@@ -136,6 +142,23 @@ const NotFollowed = (props) => {
           if (follow == false) {
             setFollow(true);
             // update doc .array de followers
+            await updateDoc(doc(db, "users", props.user.id), {
+              followed: arrayUnion(props.id),
+            }).then(async () => {
+              await updateDoc(doc(db, "users", props.id), {
+                followers: arrayUnion(props.user.id),
+              });
+            });
+          } else {
+            // .................+#
+            setFollow(false);
+            await updateDoc(doc(db, "users", props.user.id), {
+              followed: arrayRemove(props.id),
+            }).then(async () => {
+              await updateDoc(doc(db, "users", props.id), {
+                followers: arrayRemove(props.user.id),
+              });
+            });
           }
           console.log("clickd");
         }}
