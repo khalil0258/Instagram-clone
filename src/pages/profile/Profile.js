@@ -29,8 +29,13 @@ function Profile() {
     const docum = await getDoc(doc(db, "users", id));
     return { ...docum?.data() };
   };
+  const FollowChanger = (value) => {
+    setFollowed(value);
+  };
+  // this use effect to know if the profile we are in is the userProfile or an other profile ( followed /infollowed)
   useEffect(() => {
     if (userId2 === user.id) {
+      // here we see if the profile match the user
       setUserState(true);
 
       fetchUsers(user.id).then((res) => {
@@ -49,13 +54,16 @@ function Profile() {
         setUserInfos(res);
         console.log(userInfos);
 
-        if (res?.followed.includes(userId2)) {
+        // checking if  the user followers includes the user id 
+        if (res?.followers.includes(user.id)) {
           setFollowed(true);
+          console.log("true");
         } else {
           setFollowed(false);
         }
         dispatch(setComponentLoading(false));
       });
+      // cleanup function 
       return () => {
         setUserInfos({});
       };
@@ -73,6 +81,7 @@ function Profile() {
             userState={userState}
             followed={followed}
             infos={userInfos}
+            FollowChanger={FollowChanger}
           />
           {/* ............................... */}
           <ProfilePosts />

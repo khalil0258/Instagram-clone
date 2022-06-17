@@ -13,7 +13,7 @@ import {
 import { db } from "../../Firebase/Firebase";
 import { useSelector } from "react-redux";
 import { userDetail } from "../../features/auth-state/auth-slice";
-function InformationSection({ userState, followed, infos }) {
+function InformationSection({ userState, followed, infos, FollowChanger }) {
   const user = useSelector(userDetail);
   console.log(infos);
   return (
@@ -44,7 +44,11 @@ function InformationSection({ userState, followed, infos }) {
                 <Followed />
               ) : (
                 // profile of not followed user
-                <NotFollowed id={infos.userId} user={user} />
+                <NotFollowed
+                  id={infos.userId}
+                  user={user}
+                  FollowChanger={FollowChanger}
+                />
               )}
             </div>
             {/* section that shows the followers and the following and the posts number */}
@@ -121,15 +125,15 @@ const NotFollowed = (props) => {
     return docum.data();
   };
 
-  useEffect(() => {
-    fetchFollow().then((res) => {
-      if (res?.followers.includes(props.id)) {
-        setFollow(true);
-      } else {
-        setFollow(false);
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   fetchFollow().then((res) => {
+  //     if (res?.followers.includes(props.id)) {
+  //       setFollow(true);
+  //     } else {
+  //       setFollow(false);
+  //     }
+  //   });
+  // }, []);
   return (
     <div className="flex  ">
       <button
@@ -139,31 +143,20 @@ const NotFollowed = (props) => {
             : "bg-blue-500 text-white"
         }`}
         onClick={async () => {
-          if (follow == false) {
-            setFollow(true);
-            // update doc .array de followers
-            await updateDoc(doc(db, "users", props.user.id), {
-              followed: arrayUnion(props.id),
-            }).then(async () => {
-              await updateDoc(doc(db, "users", props.id), {
-                followers: arrayUnion(props.user.id),
-              });
+          props.FollowChanger(true);
+          // update doc .array de followers
+          await updateDoc(doc(db, "users", props.user.id), {
+            followed: arrayUnion(props.id),
+          }).then(async () => {
+            await updateDoc(doc(db, "users", props.id), {
+              followers: arrayUnion(props.user.id),
             });
-          } else {
-            // .................+#
-            setFollow(false);
-            await updateDoc(doc(db, "users", props.user.id), {
-              followed: arrayRemove(props.id),
-            }).then(async () => {
-              await updateDoc(doc(db, "users", props.id), {
-                followers: arrayRemove(props.user.id),
-              });
-            });
-          }
-          console.log("clickd");
+          });
+
+          // console.log("clickd");
         }}
       >
-        {follow ? "Infollow" : "follow"}
+        Follow
       </button>
 
       <button className="px-1 capitalize  mr-2 text-sm font-medium bg-blue-500 text-white  rounded-sm ">
