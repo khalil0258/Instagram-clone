@@ -26,10 +26,10 @@ function DescriptionSection(props) {
     if (props.img == null) return alert("error");
     // alert("imgAded");
 
-    const imageRef = ref(storage, `users/${user.uid}/posts/${props.img.name}`);
+    const imageRef = ref(storage, `users/${user.id}/posts/${props.img.name}`);
     await uploadBytes(imageRef, props.img)
       .then(async () => {
-        await addDoc(collection(db, "users", user.uid, "posts"), {
+        await addDoc(collection(db, "users", user.id, "posts"), {
           likes: [],
           imageUrl: props.img.name || "",
           description: description || "",

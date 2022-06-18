@@ -16,7 +16,7 @@ function Feed() {
   // console.log("user", user);
   useEffect(() => {
     const fetchData = async () => {
-      const userData = await getDoc(doc(db, "users", user.uid));
+      const userData = await getDoc(doc(db, "users", user.id));
       // console.log("doc", userData);
       return { ...userData.data() };
     };

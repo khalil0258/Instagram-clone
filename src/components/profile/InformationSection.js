@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import CheckIcon from "@mui/icons-material/Check";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { HeaderContainer } from "../global/ContainerSignup";
-
+import PersonIcon from "@mui/icons-material/Person";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import {
   arrayRemove,
@@ -13,9 +14,13 @@ import {
 import { db } from "../../Firebase/Firebase";
 import { useSelector } from "react-redux";
 import { userDetail } from "../../features/auth-state/auth-slice";
+import Unfollow from "./Unfollow";
+
+// ...........................
 function InformationSection({ userState, followed, infos, FollowChanger }) {
   const user = useSelector(userDetail);
   console.log(infos);
+  document.title = infos.userName;
   return (
     <div>
       <HeaderContainer>
@@ -41,7 +46,15 @@ function InformationSection({ userState, followed, infos, FollowChanger }) {
                 <CurrentUser />
               ) : followed ? (
                 // profile of followed user
-                <Followed />
+                <Followed
+                  img={
+                    (infos && infos?.profileImage) ||
+                    require("../../assets/signupAssets/my.jpg")
+                  }
+                  FollowChanger={FollowChanger}
+                  id={infos.userId}
+                  user={user}
+                />
               ) : (
                 // profile of not followed user
                 <NotFollowed
@@ -90,31 +103,48 @@ function InformationSection({ userState, followed, infos, FollowChanger }) {
   );
 }
 
-const Followed = () => {
+const Followed = (props) => {
+  const [showMenu, setShowMenu] = useState(false);
+  const clicked = () => {
+    setShowMenu(false);
+  };
   return (
     <div className="flex ">
       <button className="px-1 capitalize  mr-2 text-sm font-medium  border border-black border-opacity-20 rounded-sm ">
         Message
       </button>
       <button className="px-1 capitalize  mr-2 text-sm font-medium  border border-black border-opacity-20 rounded-sm ">
-        <FavoriteBorderOutlinedIcon sx={{ height: "23px", width: "27px" }} />
+        <PersonIcon
+          sx={{ height: "23px", width: "27px" }}
+          onClick={() => {
+            setShowMenu(true);
+          }}
+        />
       </button>
       <button className="px-1 capitalize  mr-2 text-sm font-medium  border border-black border-opacity-20 rounded-sm ">
-        <MoreHorizIcon />
+        <CheckIcon />
       </button>
       <button className="px-1 capitalize  mr-2 text-sm font-medium    ">
         <MoreHorizIcon />
       </button>
+      <Unfollow
+        open={showMenu}
+        clicked={clicked}
+        img={props.img}
+        FollowChanger={props.FollowChanger}
+        id={props.id}
+        user={props.user}
+      />
     </div>
   );
 };
 const CurrentUser = () => {
   return (
     <div>
-      <button className="px-1 capitalize  mr-2 text-sm font-medium  border border-black border-opacity-20 rounded-sm ">
+      <button className="px-1 capitalize  mr-2 text-sm font-medium  border border-black border-opacity-20 rounded-sm cursor-pointer ">
         edit Profile
       </button>
-      <FavoriteBorderOutlinedIcon />
+      <SettingsIcon className="cursor-pointer" />
     </div>
   );
 };
@@ -160,7 +190,7 @@ const NotFollowed = (props) => {
       </button>
 
       <button className="px-1 capitalize  mr-2 text-sm font-medium bg-blue-500 text-white  rounded-sm ">
-        <MoreHorizIcon />
+        <CheckIcon />
       </button>
       <button className="px-1 capitalize  mr-2 text-sm font-medium    ">
         <MoreHorizIcon />
