@@ -87,14 +87,17 @@ function Header() {
                 <HomeIcon sx={{ height: "27px", width: "27px" }} />
               </Link>
             </div>
-            <div className="mr-6 cursor-pointer relative ">
-              <img
-                src={require("../../assets/icons/messengerIcon.png")}
-                alt="messenger"
-                className="transform scale-50"
-              />
-              <span className="spanIcon">1</span>
-            </div>
+
+            <Link to="/direct">
+              <div className="mr-6 cursor-pointer relative ">
+                <img
+                  src={require("../../assets/icons/messengerIcon.png")}
+                  alt="messenger"
+                  className="transform scale-50"
+                />
+                <span className="spanIcon">1</span>
+              </div>
+            </Link>
             <div
               className="mr-6 cursor-pointer"
               onClick={() => {
