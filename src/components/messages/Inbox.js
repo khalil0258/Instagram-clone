@@ -5,6 +5,7 @@ function Inbox() {
   return (
     <div className="w-[565px]  text-right flex items-center">
       <div className="w-[8=90%] mx-auto text-center ">
+          {/* the icon must be changed  */}
         <ExploreOutlinedIcon sx={{ height: "110px", width: "110px" }} />
         <h2 className="font-light text-2xl mt-4">Vos messages</h2>
         <p className="text-global text-sm my-4 ">
