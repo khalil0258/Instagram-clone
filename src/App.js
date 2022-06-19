@@ -23,7 +23,7 @@ import Loading from "./components/global/Loading";
 import Profile from "./pages/profile/Profile";
 import Messages from "./pages/messages/Messages";
 import Message from "./components/messages/Message";
-
+import Inbox from "./components/messages/Inbox";
 
 function App() {
   const isAuth = useAuth();
@@ -74,7 +74,8 @@ function App() {
           <Route path="feed" element={<Feed />} exact />
           <Route path=":id" element={<Profile />} exact />
           <Route path="direct" element={<Messages />}>
-            <Route path="inbox" element={<Message />} />
+            <Route path="inbox" element={<Inbox />} />
+            <Route path=":id" element={<Message />} />
           </Route>
         </Route>
       </Routes>

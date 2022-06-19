@@ -6,7 +6,12 @@ import { FacebookAuthProvider } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-
+  apiKey: "AIzaSyDDXILMjnCwMO0bXHyf_EQPuutz8HOVmgc",
+  authDomain: "instagram-clone-709a6.firebaseapp.com",
+  projectId: "instagram-clone-709a6",
+  storageBucket: "instagram-clone-709a6.appspot.com",
+  messagingSenderId: "140930178297",
+  appId: "1:140930178297:web:48dda140a3d2c478ca1628",
 };
 
 // Initialize Firebase

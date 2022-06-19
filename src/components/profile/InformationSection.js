@@ -5,16 +5,21 @@ import { HeaderContainer } from "../global/ContainerSignup";
 import PersonIcon from "@mui/icons-material/Person";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import {
+  addDoc,
   arrayRemove,
   arrayUnion,
   doc,
   getDoc,
+  serverTimestamp,
+  setDoc,
+  Timestamp,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../Firebase/Firebase";
 import { useSelector } from "react-redux";
 import { userDetail } from "../../features/auth-state/auth-slice";
 import Unfollow from "./Unfollow";
+import { useNavigate } from "react-router";
 
 // ...........................
 function InformationSection({ userState, followed, infos, FollowChanger }) {
@@ -52,7 +57,7 @@ function InformationSection({ userState, followed, infos, FollowChanger }) {
                     require("../../assets/signupAssets/my.jpg")
                   }
                   FollowChanger={FollowChanger}
-                  id={infos.userId}
+                  infos={infos}
                   user={user}
                 />
               ) : (
@@ -104,13 +109,30 @@ function InformationSection({ userState, followed, infos, FollowChanger }) {
 }
 
 const Followed = (props) => {
+  const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const clicked = () => {
     setShowMenu(false);
   };
+  console.log(props.infos);
   return (
     <div className="flex ">
-      <button className="px-1 capitalize  mr-2 text-sm font-medium  border border-black border-opacity-20 rounded-sm ">
+      <button
+        className="px-1 capitalize  mr-2 text-sm font-medium  border border-black border-opacity-20 rounded-sm "
+        onClick={async () => {
+          await setDoc(
+            doc(db, "users", props.user.id, "rooms", props.infos.userId),
+            {
+              id: props.infos.userId,
+              userName: props.infos.userName,
+              photoURL: props.infos.profileImage,
+              time: new serverTimestamp(),
+            }
+          ).then(() => {
+            navigate(`/direct/${props.id}`);
+          });
+        }}
+      >
         Message
       </button>
       <button className="px-1 capitalize  mr-2 text-sm font-medium  border border-black border-opacity-20 rounded-sm ">

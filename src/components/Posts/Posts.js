@@ -33,13 +33,13 @@ function Posts() {
       )}
       <div>{/* storys */}</div>
       <div>
-        {/* <Post />
         <Post />
         <Post />
         <Post />
         <Post />
         <Post />
-        <Post /> */}
+        <Post />
+        <Post />
       </div>
     </div>
   );

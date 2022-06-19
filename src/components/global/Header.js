@@ -88,7 +88,7 @@ function Header() {
               </Link>
             </div>
 
-            <Link to="/direct">
+            <Link to="/direct/inbox">
               <div className="mr-6 cursor-pointer relative ">
                 <img
                   src={require("../../assets/icons/messengerIcon.png")}
