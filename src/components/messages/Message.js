@@ -1,5 +1,5 @@
-import { doc, getDoc, getDocs } from "firebase/firestore";
-import React, { useEffect } from "react";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { userDetail } from "../../features/auth-state/auth-slice";
@@ -7,6 +7,7 @@ import { db } from "../../Firebase/Firebase";
 
 function Message() {
   let location = useLocation();
+  const [roomInfo, setRoomInfo] = useState({});
   //   console.log(location);
   //   geting the room id
   let pathName = location.pathname.split("/", 3)[2];
@@ -14,25 +15,42 @@ function Message() {
   //   console.log(pathName);
 
   useEffect(() => {
-    const getRoom = async () => {
+    const getUserRoom = async () => {
       const room = await getDoc(doc(db, "users", user.id, "rooms", pathName));
       return room.data();
     };
-    const getMessages = async () => {
+    const getFriendRoom = async () => {
+      const room = await getDoc(doc(db, "users", pathName, "rooms", user.id));
+      return room.data();
+    };
+    const getUserMessages = async () => {
       let messages = [];
       const messagesDocs = await getDocs(
-        doc(db, "users", user.id, "rooms", pathName, "messages")
+        collection(db, "users", user.id, "rooms", pathName, "messages")
       );
-      messagesDocs.forEach((mess) => {
-        messages.push(messagesDocs.docs);
+      messagesDocs?.forEach((mess) => {
+        messages.push(mess.docs);
       });
-      return messages;
+      return messages.length !== 0 ? messages : {};
     };
-    const num = 33;
-    // Promise.all(num).then((res) => {
-    //   console.log(res);
-    // });
-  }, [pathName]);
+    const getFriendMessages = async () => {
+      let messages = [];
+      const messagesDocs = await getDocs(
+        collection(db, "users", pathName, "rooms", user.id, "messages")
+      );
+      messagesDocs?.forEach((mess) => {
+        messages.push(mess.docs);
+      });
+      return messages.length !== 0 ? messages : {};
+    };
+    getUserRoom()
+      .then((res) => {
+        setRoomInfo(res);
+      })
+      .then(() => {
+        console.log(roomInfo);
+      });
+  }, []);
 
   return (
     <div>

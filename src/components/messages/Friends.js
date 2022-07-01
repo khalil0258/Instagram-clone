@@ -31,7 +31,12 @@ function Friends() {
       </div>
       <div className="overflow-y-scroll h-[460px]">
         {rooms.map((room) => (
-          <Friend id={room.id} img={room.photoURl} userName={room.userName} />
+          <Friend
+            key={room.id}
+            id={room.id}
+            img={room.photoURl}
+            userName={room.userName}
+          />
         ))}
         {/* <Friend id={"123"} /> */}
       </div>
