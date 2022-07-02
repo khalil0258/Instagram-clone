@@ -1,5 +1,5 @@
 import { collection, doc, getDocs } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { userDetail } from "../../features/auth-state/auth-slice";
 import { db } from "../../Firebase/Firebase";
@@ -9,17 +9,17 @@ import Friend from "./Friend";
 function Friends() {
   const user = useSelector(userDetail);
   const [rooms, setRooms] = useState([]);
+  const fetchFriends = useCallback(async () => {
+    let rooms = [];
+    const roomsDocuments = await getDocs(
+      collection(db, "users", user.id, "rooms")
+    );
+    roomsDocuments.forEach((room) => {
+      rooms.push(room.data());
+    });
+    return rooms;
+  }, [user.id]);
   useEffect(() => {
-    const fetchFriends = async () => {
-      let rooms = [];
-      const roomsDocuments = await getDocs(
-        collection(db, "users", user.id, "rooms")
-      );
-      roomsDocuments.forEach((room) => {
-        rooms.push(room.data());
-      });
-      return rooms;
-    };
     fetchFriends().then((result) => {
       setRooms(result);
     });
@@ -29,13 +29,14 @@ function Friends() {
       <div className="text-center py-4 font-medium text-md border-b">
         <h3>{user.displayName}</h3>
       </div>
-      <div className="overflow-y-scroll h-[460px]">
+      <div className="overflow-y-scroll h-[453px]">
         {rooms.map((room) => (
           <Friend
             key={room.id}
             id={room.id}
             img={room.photoURl}
             userName={room.userName}
+            lastMessage={room.lastMessage}
           />
         ))}
         {/* <Friend id={"123"} /> */}

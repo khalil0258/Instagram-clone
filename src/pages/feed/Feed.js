@@ -1,5 +1,5 @@
 import { signOut } from "firebase/auth";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { auth, db } from "../../Firebase/Firebase";
 import Header from "../../components/global/Header";
 import { useSelector } from "react-redux";
@@ -14,12 +14,12 @@ function Feed() {
   const user = useSelector(userDetail);
   const [userData, setUserData] = useState({});
   // console.log("user", user);
+  const fetchData = useCallback(async () => {
+    const userData = await getDoc(doc(db, "users", user.id));
+    // console.log("doc", userData);
+    return { ...userData.data() };
+  }, [user.id]);
   useEffect(() => {
-    const fetchData = async () => {
-      const userData = await getDoc(doc(db, "users", user.id));
-      // console.log("doc", userData);
-      return { ...userData.data() };
-    };
     fetchData()
       .then((res) => {
         setUserData(res);
