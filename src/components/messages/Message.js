@@ -57,33 +57,21 @@ function Message() {
   let userMessages = [];
   let friendMessages = [];
   useEffect(() => {
-    Promise.all([
-      onSnapshot(
-        collection(db, "users", user.id, "rooms", pathName, "messages"),
-        (snapshot) => {
-          userMessages.push(...snapshot?.docs);
-          //   console.log("uawe", userMessages);
-          //   console.log(userMessages)
-        }
-      ),
-      onSnapshot(
-        collection(db, "users", pathName, "rooms", user.id, "messages"),
-        (snapshot) => {
-          friendMessages.push(...snapshot?.docs);
-          //   console.log("ana", friendMessages);
-        }
-      ),
-    ])
-      .then((res) => {
-        let messagesAll = userMessages.concat(friendMessages);
-
-        console.log("messagesall", messagesAll);
-        messagesAll.sort((a, b) => a.time - b.time);
-      })
-      .then(() => {
-        // setMessages(...userMessages);
-        // console.log("NAA", messages);
-      });
+    onSnapshot(
+      collection(db, "users", user.id, "rooms", pathName, "messages"),
+      (snapshot) => {
+        userMessages.push(...snapshot?.docs);
+        
+        
+      }
+    ).;
+    onSnapshot(
+      collection(db, "users", pathName, "rooms", user.id, "messages"),
+      (snapshot) => {
+        friendMessages.push(...snapshot?.docs);
+        //   console.log("ana", friendMessages);
+      }
+    );
     getUserRoom()
       .then((res) => {
         setRoomInfo(res);
