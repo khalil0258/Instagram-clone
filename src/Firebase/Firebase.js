@@ -5,7 +5,14 @@ import { getStorage } from "firebase/storage";
 import { FacebookAuthProvider } from "firebase/auth";
 
 // Your web app's Firebase configuration
-const firebaseConfig = {};
+const firebaseConfig = {
+  apiKey: "AIzaSyCl4ls3qRuWqVipTjeosEhFXJVPuEojZew",
+  authDomain: "instclone-a72c4.firebaseapp.com",
+  projectId: "instclone-a72c4",
+  storageBucket: "instclone-a72c4.appspot.com",
+  messagingSenderId: "766021510383",
+  appId: "1:766021510383:web:184b9ebce556e58f00a71a",
+};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

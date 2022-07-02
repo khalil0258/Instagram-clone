@@ -18,12 +18,12 @@ function Friends() {
       rooms.push(room.data());
     });
     return rooms;
-  }, [user.id]);
+  }, []);
   useEffect(() => {
     fetchFriends().then((result) => {
       setRooms(result);
     });
-  });
+  }, []);
   return (
     <div className="w-[370px] h-full border-r ">
       <div className="text-center py-4 font-medium text-md border-b">
@@ -45,4 +45,4 @@ function Friends() {
   );
 }
 
-export default Friends;
+export default React.memo(Friends);

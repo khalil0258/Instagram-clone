@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 
 function Friend(props) {
   return (
-    <NavLink to={props.id} className={(isActive) => isActive && " bg-gray-300"}>
+    <Link to={props.id}>
       <div className="py-2 cursor-pointer">
         <div className="flex px-3 gap-2  ">
           <img
@@ -20,8 +20,8 @@ function Friend(props) {
           </div>
         </div>
       </div>
-    </NavLink>
+    </Link>
   );
 }
 
-export default Friend;
+export default React.memo(Friend);
