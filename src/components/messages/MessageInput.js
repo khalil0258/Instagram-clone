@@ -3,12 +3,14 @@ import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt
 import CollectionsIcon from "@mui/icons-material/Collections";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { addDoc, collection, doc, serverTimestamp } from "firebase/firestore";
-import { db } from "../../Firebase/Firebase";
+import { db, storage } from "../../Firebase/Firebase";
 import emogis from "../../textAssets/emogis.json";
+import { ref, uploadBytes } from "firebase/storage";
 
 function MessageInput(props) {
   const [text, setText] = useState("");
   const [showEmogy, setShowEmogy] = useState(false);
+  const [img, setImg] = useState();
 
   const pushMessage = async () => {
     addDoc(
@@ -52,6 +54,68 @@ function MessageInput(props) {
       });
   };
 
+  // adding img function
+  const uploadImg = async () => {
+    if (img !== undefined) {
+      // alert("imgAded");
+      const imageRef2 = ref(
+        storage,
+        `users/${props.pathName}/messages/${props.user.id}/${img.name}`
+      );
+      const imageRef = ref(
+        storage,
+        `users/${props.user.id}/messages/${props.pathName}/${img.name}`
+      );
+      await uploadBytes(imageRef, img)
+        .then(async () => {
+          await uploadBytes(imageRef2, img);
+        })
+        .then(async () => {
+          await addDoc(
+            collection(
+              db,
+              "users",
+              props.user.id,
+              "rooms",
+              props.pathName,
+              "messages"
+            ),
+            {
+              type: "image",
+              message: img.name,
+              time: new serverTimestamp(),
+              senderId: props.user.id,
+              senderImg: props.user.photoURL,
+            }
+          );
+        })
+        .then(async () => {
+          await addDoc(
+            collection(
+              db,
+              "users",
+              props.pathName,
+              "rooms",
+              props.user.id,
+              "messages"
+            ),
+            {
+              type: "image",
+              message: img.name,
+              time: new serverTimestamp(),
+              senderId: props.user.id,
+              senderImg: props.user.photoURL,
+            }
+          );
+        })
+        .then(() => {
+          alert("image added");
+        })
+        .catch((err) => {
+          alert(err.message);
+        });
+    }
+  };
   return (
     <div className="absolute bottom-4 w-[92%] mx-auto px-4 right-[4%] py-3   bg-white border rounded-full flex items-start justify-start gap-4 shadow-sm">
       <div className="relative">
@@ -63,7 +127,7 @@ function MessageInput(props) {
           }}
         />
         {showEmogy && (
-          <div className="flex h-48 absolute bottom-11 -left-4 w-48 bg-white border shadow-sm flex-wrap overflow-scroll overflow-x-hidden">
+          <div className="flex h-48 absolute bottom-11 -left-4 w-48 bg-white border shadow-sm flex-wrap overflow-scroll overflow-x-hidden cursor-pointer">
             {emogis.emojis.map((e, index) => (
               <span
                 key={index}
@@ -101,7 +165,18 @@ function MessageInput(props) {
               <label htmlFor="file-input" className="cursor-pointer">
                 <CollectionsIcon />
               </label>
-              <input type="file" className="hidden" id="file-input" />
+              <input
+                type="file"
+                className="hidden"
+                id="file-input"
+                onInput={(e) => {
+                  setImg(e.target.files[0]);
+                  if (img != undefined) {
+                    console.log(img);
+                    uploadImg();
+                  }
+                }}
+              />
             </div>
             <div className="flex items-center ">
               <FavoriteBorderIcon

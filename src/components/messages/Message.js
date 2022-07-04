@@ -62,13 +62,12 @@ function Message() {
       collection(db, "users", user.id, "rooms", pathName, "messages"),
       orderBy("time", "asc")
     );
-    setMessages([]);
     let unsubscribe = onSnapshot(q, (querySnapshot) => {
+      let msg = [];
       querySnapshot.forEach((doc) => {
-        setMessages((prev) => {
-          return [...prev, { ...doc.data() }];
-        });
+        msg.push({ ...doc.data() });
       });
+      setMessages(msg);
     });
 
     return unsubscribe;
@@ -99,20 +98,26 @@ function Message() {
             {Object.values(messages).map((message, index) => {
               console.log(message);
 
-              if (message.senderId === user.id) {
+              if (message?.senderId === user.id) {
                 return (
                   <UserMessages
                     key={index}
-                    message={message.message}
-                    time={new Date(message.time.toDate()).toUTCString()}
+                    senderId={pathName}
+                    type={message?.type}
+                    userId={user.id}
+                    message={message?.message}
+                    time={new Date(message?.time?.toDate()).toUTCString()}
                   />
                 );
               } else {
                 return (
                   <FriendMessage
                     key={index}
-                    message={message.message}
-                    time={new Date(message.time.toDate()).toUTCString()}
+                    userId={user.id}
+                    senderId={pathName}
+                    type={message?.type}
+                    message={message?.message}
+                    time={new Date(message?.time?.toDate()).toUTCString()}
                   />
                 );
               }

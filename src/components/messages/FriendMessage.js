@@ -21,4 +21,4 @@ function FriendMessage(props) {
   );
 }
 
-export default FriendMessage;
+export default React.memo(FriendMessage);
