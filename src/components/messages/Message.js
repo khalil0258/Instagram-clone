@@ -6,6 +6,9 @@ import {
   onSnapshot,
   query,
   orderBy,
+  updateDoc,
+  limit,
+  where,
 } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -31,32 +34,13 @@ function Message() {
     return room.data();
   }, [pathName]);
 
+  //   this useEffect is for the messages rooms in the left
   useEffect(() => {
-    // console.log(typeof messages);
-    // const q = query(
-    //   collection(db, "users", user.id, "rooms", pathName, "messages"),
-    //   orderBy("time", "asc")
-    // );
-    // onSnapshot(q, (snapshot) => {
-    //   userMessages.push(
-    //     ...snapshot?.docs.map((doc) => {
-    //       return doc.data();
-    //     })
-    //   );
-    //   console.log("userMessages", userMessages);
-    //   console.log("type of userMessages", typeof userMessages);
-    //   setMessages(UserMessages);
-    //   console.log(typeof messages);
-
-    //   //   return userMessages;
-    // });
-
     getUserRoom().then((res) => {
       setRoomInfo(res);
-      // console.log(res);
     });
   }, []);
-
+  //  and this useEffect is for the messages section .it listen to the changes of the db and run every time we change anything in db
   useEffect(() => {
     const q = query(
       collection(db, "users", user.id, "rooms", pathName, "messages"),
@@ -65,13 +49,31 @@ function Message() {
     let unsubscribe = onSnapshot(q, (querySnapshot) => {
       let msg = [];
       querySnapshot.forEach((doc) => {
-        msg.push({ ...doc.data() });
+        msg.push({ ...doc.data(), id: doc.id });
       });
       setMessages(msg);
     });
 
     return unsubscribe;
   }, []);
+
+  const addVueStatement = async () => {
+    let q = query(
+      doc(
+        db,
+        "users",
+        user.id,
+        "rooms",
+        pathName,
+        "messages",
+        messages[messages.length - 1].id
+      )
+    );
+    await updateDoc(q, {
+      seen: true,
+    });
+  };
+  addVueStatement();
 
   return (
     <div>
@@ -102,17 +104,23 @@ function Message() {
                 return (
                   <UserMessages
                     key={index}
+                    index={index}
+                    seen={message?.seen}
                     senderId={pathName}
                     type={message?.type}
                     userId={user.id}
                     message={message?.message}
                     time={new Date(message?.time?.toDate()).toUTCString()}
+                    length={messages?.length - 1}
                   />
                 );
               } else {
                 return (
                   <FriendMessage
                     key={index}
+                    index={index}
+                    seen={message?.seen}
+                    photoURL={roomInfo?.photoURL}
                     userId={user.id}
                     senderId={pathName}
                     type={message?.type}

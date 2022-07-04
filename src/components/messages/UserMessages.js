@@ -4,6 +4,14 @@ import { storage } from "../../Firebase/Firebase";
 
 function UserMessages(props) {
   const [show, setShow] = useState(false);
+  const [seen, setSeen] = useState(false);
+
+  useEffect(() => {
+    console.log(props.index, props.length, props.seen);
+    if (props.index === props.length) {
+      setSeen(props.seen);
+    }
+  }, [show]);
   useEffect(() => {
     if (props.type === "image") {
       getDownloadURL(
@@ -23,7 +31,7 @@ function UserMessages(props) {
     return (
       <div className="self-end mb-2  ">
         <div
-          className="bg-gray-300 text-black p-2 text-sm font-normal rounded-full border "
+          className="bg-gray-300 text-black p-2 text-sm font-normal rounded-full border rounded-br-none "
           onClick={() => {
             setShow(!show);
           }}
@@ -31,11 +39,17 @@ function UserMessages(props) {
           {props.message}
         </div>
         {show && (
-          <span className="text-gray-400 text-xs mt-2 mr-2 flex justify-end">
-            {props.time}
-          </span>
+          <>
+            <span className="text-gray-400 text-xs mt-2 mr-2 flex justify-end">
+              {props.time}
+            </span>
+            {seen && (
+              <span className="text-sm font-normal text-gray-500 text-right">
+                Vu
+              </span>
+            )}
+          </>
         )}
-        {/* <span className="text-sm font-normal text-gray-500 "></span> */}
       </div>
     );
   } else {
@@ -44,17 +58,21 @@ function UserMessages(props) {
         <img
           src={img}
           alt="message pic"
-          className="h-40 w-28 rounded-md "
+          className="h-40 w-32 rounded-md object-cover "
           onClick={() => {
             setShow(!show);
           }}
         />
         {show && (
-          <span className="text-gray-400 text-xs mt-2  flex justify-end">
-            {props.time}
-          </span>
+          <>
+            <span className="text-gray-400 text-xs mt-2  flex justify-end">
+              {props.time}
+            </span>
+            {seen && (
+              <span className="text-sm font-normal text-gray-500 ">Vu</span>
+            )}
+          </>
         )}
-        {/* <span className="text-sm font-normal text-gray-500 text-right">gg</span> */}
       </div>
     );
   }

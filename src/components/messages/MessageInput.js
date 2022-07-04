@@ -10,7 +10,7 @@ import { ref, uploadBytes } from "firebase/storage";
 function MessageInput(props) {
   const [text, setText] = useState("");
   const [showEmogy, setShowEmogy] = useState(false);
-  const [img, setImg] = useState();
+  const [img, setImg] = useState("");
 
   const pushMessage = async () => {
     addDoc(
@@ -28,6 +28,7 @@ function MessageInput(props) {
         time: new serverTimestamp(),
         senderId: props.user.id,
         senderImg: props.user.photoURL,
+        seen: true,
       }
     )
       .then(() => {
@@ -46,6 +47,7 @@ function MessageInput(props) {
             time: new serverTimestamp(),
             senderId: props.user.id,
             senderImg: props.user.photoURL,
+            seen: false,
           }
         );
       })
@@ -86,6 +88,7 @@ function MessageInput(props) {
               time: new serverTimestamp(),
               senderId: props.user.id,
               senderImg: props.user.photoURL,
+              seen: true,
             }
           );
         })
@@ -105,6 +108,7 @@ function MessageInput(props) {
               time: new serverTimestamp(),
               senderId: props.user.id,
               senderImg: props.user.photoURL,
+              seen: false,
             }
           );
         })
