@@ -20,6 +20,7 @@ const Profiles = ({ users }) => {
           key={user.userId}
           className="w-full h-14 flex items-center justify-start gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100 "
           onClick={() => {
+            // set the id to the user  id
             dispatch(setProfileId({ id: user?.userId }));
             navigate(`/${user?.name}`);
           }}

@@ -22,6 +22,7 @@ function Friends() {
   useEffect(() => {
     fetchFriends().then((result) => {
       setRooms(result);
+      // console.log(result);
     });
   }, []);
   return (

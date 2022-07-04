@@ -6,15 +6,17 @@ import Friends from "../../components/messages/Friends";
 
 function Messages() {
   return (
-    <HeaderHolder>
-      {/* the main section that combine the two routes  */}
-      <HeaderContainer>
-        <div className="w-full  bg-white h-[510px] transform -translate-y-4 border  mx-auto rounded-lg flex">
-          <Friends />
-          <Outlet />
-        </div>
-      </HeaderContainer>
-    </HeaderHolder>
+    <div className="overflow-hidden">
+      <HeaderHolder>
+        {/* the main section that combine the two routes  */}
+        <HeaderContainer>
+          <div className="w-full  bg-white h-[510px] transform -translate-y-4 border  mx-auto rounded-lg flex">
+            <Friends />
+            <Outlet />
+          </div>
+        </HeaderContainer>
+      </HeaderHolder>
+    </div>
   );
 }
 

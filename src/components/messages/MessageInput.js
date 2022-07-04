@@ -27,13 +27,30 @@ function MessageInput(props) {
         senderId: props.user.id,
         senderImg: props.user.photoURL,
       }
-    ).then(() => {
-      setText("");
-    });
+    )
+      .then(() => {
+        addDoc(
+          collection(
+            db,
+            "users",
+            props.pathName,
+            "rooms",
+            props.user.id,
+            "messages"
+          ),
+          {
+            type: "text",
+            message: text,
+            time: new serverTimestamp(),
+            senderId: props.user.id,
+            senderImg: props.user.photoURL,
+          }
+        );
+      })
+      .then(() => {
+        setText("");
+      });
   };
-  useEffect(() => {
-    console.log(props);
-  }, []);
 
   return (
     <div className="absolute bottom-4 w-[92%] mx-auto px-4 right-[4%] py-3   bg-white border rounded-full flex items-start justify-start gap-4 shadow-sm">
@@ -72,7 +89,10 @@ function MessageInput(props) {
       />
       <div className="flex items-center gap-3 justify-center">
         {text ? (
-          <p className="text-blue-500 font-medium " onClick={pushMessage}>
+          <p
+            className="text-blue-500 font-medium cursor-pointer"
+            onClick={pushMessage}
+          >
             send
           </p>
         ) : (
