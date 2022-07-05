@@ -1,11 +1,19 @@
 import { getDownloadURL, ref } from "firebase/storage";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { storage } from "../../Firebase/Firebase";
 
 function FriendMessage(props) {
   const [show, setShow] = useState(false);
   const [img, setImg] = useState("");
+  const messageLast = useRef("");
   useEffect(() => {
+    // if (props.index === props.length) {
+
+    //   messageLast.current.scrollIntoView({
+    //     behavior: "smooth",
+    //     block: "start",
+    //   });
+    // }
     if (props.type === "image") {
       getDownloadURL(
         ref(
@@ -21,7 +29,7 @@ function FriendMessage(props) {
   }, []);
   if (props.type === "text") {
     return (
-      <div className="self-start mb-2  ">
+      <div className="self-start mb-2  " ref={messageLast}>
         <div className="flex gap-1">
           <img
             src={props.photoURl || require("../../assets/profile.png")}
@@ -48,7 +56,10 @@ function FriendMessage(props) {
     );
   } else {
     return (
-      <div className="self-start mb-2 mr-2  flex items-start flex-col">
+      <div
+        className="self-start mb-2 mr-2  flex items-start flex-col"
+        ref={messageLast}
+      >
         <img
           src={img}
           alt="message pic"

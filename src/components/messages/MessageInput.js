@@ -2,7 +2,13 @@ import React, { Fragment, useEffect, useMemo, useState } from "react";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { addDoc, collection, doc, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { db, storage } from "../../Firebase/Firebase";
 import emogis from "../../textAssets/emogis.json";
 import { ref, uploadBytes } from "firebase/storage";
@@ -51,8 +57,15 @@ function MessageInput(props) {
           }
         );
       })
-      .then(() => {
-        setText("");
+      .then(async () => {
+        await updateDoc(
+          doc(db, "users", props.pathName, "rooms", props.user.id),
+          {
+            lastMessage: text,
+          }
+        ).then(() => {
+          setText("");
+        });
       });
   };
 
@@ -109,6 +122,14 @@ function MessageInput(props) {
               senderId: props.user.id,
               senderImg: props.user.photoURL,
               seen: false,
+            }
+          );
+        })
+        .then(async () => {
+          await updateDoc(
+            collection(db, "users", props.pathName, "rooms", props.user.id),
+            {
+              lastMessage: text,
             }
           );
         })

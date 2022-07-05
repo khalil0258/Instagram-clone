@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useSelector } from "react-redux";
 import { userDetail } from "../../features/auth-state/auth-slice";
-import { addDoc, collection, doc } from "firebase/firestore";
+import { addDoc, collection, doc, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../../Firebase/Firebase";
 
@@ -34,6 +34,7 @@ function DescriptionSection(props) {
           imageUrl: props.img.name || "",
           description: description || "",
           location: inputPlace || "",
+          time: new serverTimestamp(),
         }).then(() => {
           alert("imgAdded");
           props.clicked();

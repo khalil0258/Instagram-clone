@@ -1,15 +1,20 @@
 import { getDownloadURL, ref } from "firebase/storage";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { storage } from "../../Firebase/Firebase";
 
 function UserMessages(props) {
   const [show, setShow] = useState(false);
   const [seen, setSeen] = useState(false);
+  const messageLast = useRef("");
 
   useEffect(() => {
     console.log(props.index, props.length, props.seen);
     if (props.index === props.length) {
       setSeen(props.seen);
+
+    //   messageLast.current.scrollIntoView({
+    //     behavior: "smooth",
+    //   });
     }
   }, [show]);
   useEffect(() => {
@@ -29,7 +34,7 @@ function UserMessages(props) {
   const [img, setImg] = useState("");
   if (props.type === "text") {
     return (
-      <div className="self-end mb-2  ">
+      <div className="self-end mb-2  " ref={messageLast}>
         <div
           className="bg-gray-300 text-black p-2 text-sm font-normal rounded-full border rounded-br-none "
           onClick={() => {
@@ -43,18 +48,16 @@ function UserMessages(props) {
             <span className="text-gray-400 text-xs mt-2 mr-2 flex justify-end">
               {props.time}
             </span>
-            {seen && (
-              <span className="text-sm font-normal text-gray-500 text-right">
-                Vu
-              </span>
-            )}
           </>
         )}
       </div>
     );
   } else {
     return (
-      <div className="self-end mb-2 mr-2  flex items-end flex-col">
+      <div
+        className="self-end mb-2 mr-2  flex items-end flex-col"
+        ref={messageLast}
+      >
         <img
           src={img}
           alt="message pic"
@@ -68,9 +71,6 @@ function UserMessages(props) {
             <span className="text-gray-400 text-xs mt-2  flex justify-end">
               {props.time}
             </span>
-            {seen && (
-              <span className="text-sm font-normal text-gray-500 ">Vu</span>
-            )}
           </>
         )}
       </div>

@@ -36,6 +36,8 @@ function Message() {
 
   //   this useEffect is for the messages rooms in the left
   useEffect(() => {
+    // document.getElementById("messages").firstElementChild.scrollTo(0, 400);
+
     getUserRoom().then((res) => {
       setRoomInfo(res);
     });
@@ -66,7 +68,7 @@ function Message() {
         "rooms",
         pathName,
         "messages",
-        messages[messages.length - 1].id
+        messages[messages?.length - 1]?.id
       )
     );
     await updateDoc(q, {
@@ -95,41 +97,50 @@ function Message() {
         </div>
         {/* messages section  */}
         <div id="messages" className="h-full">
-          <div className="flex flex-col justify-start p-2 overflow-scroll h-[75%] overflow-x-hidden">
+          <div className="flex flex-col justify-start p-2 overflow-scroll h-[75%] overflow-x-hidden ">
             {/* messages container */}
-            {Object.values(messages).map((message, index) => {
-              console.log(message);
+            {messages.length === 0 ? (
+              <div className="relative top-32 ">
+                <h2 className="text-2xl  font-medium font-sans space  ">{roomInfo?.userName}</h2>
+                <p className="font-thin text-sm text-global">Start Conversation</p>
+              </div>
+            ) : (
+              <>
+                {Object.values(messages).map((message, index) => {
+                  console.log(message);
 
-              if (message?.senderId === user.id) {
-                return (
-                  <UserMessages
-                    key={index}
-                    index={index}
-                    seen={message?.seen}
-                    senderId={pathName}
-                    type={message?.type}
-                    userId={user.id}
-                    message={message?.message}
-                    time={new Date(message?.time?.toDate()).toUTCString()}
-                    length={messages?.length - 1}
-                  />
-                );
-              } else {
-                return (
-                  <FriendMessage
-                    key={index}
-                    index={index}
-                    seen={message?.seen}
-                    photoURL={roomInfo?.photoURL}
-                    userId={user.id}
-                    senderId={pathName}
-                    type={message?.type}
-                    message={message?.message}
-                    time={new Date(message?.time?.toDate()).toUTCString()}
-                  />
-                );
-              }
-            })}
+                  if (message?.senderId === user.id) {
+                    return (
+                      <UserMessages
+                        key={index}
+                        index={index}
+                        seen={message?.seen}
+                        senderId={pathName}
+                        type={message?.type}
+                        userId={user.id}
+                        message={message?.message}
+                        time={new Date(message?.time?.toDate()).toUTCString()}
+                        length={messages?.length - 1}
+                      />
+                    );
+                  } else {
+                    return (
+                      <FriendMessage
+                        key={index}
+                        index={index}
+                        seen={message?.seen}
+                        photoURL={roomInfo?.photoURL}
+                        userId={user.id}
+                        senderId={pathName}
+                        type={message?.type}
+                        message={message?.message}
+                        time={new Date(message?.time?.toDate()).toUTCString()}
+                      />
+                    );
+                  }
+                })}
+              </>
+            )}
           </div>
           <MessageInput user={user} pathName={pathName} />
         </div>
