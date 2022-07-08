@@ -5,19 +5,42 @@ import { list, ref } from "firebase/storage";
 import { db, storage } from "../../Firebase/Firebase";
 import { useSelector } from "react-redux";
 import { userDetail } from "../../features/auth-state/auth-slice";
-import { getDoc, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
 function Posts() {
   const user = useSelector(userDetail);
   const [showLoadingIcon, setShowLoadinIcon] = useState(false);
+  const [postss, setPostss] = useState([]);
   useEffect(() => {
     const fetch = async () => {
-      // await getDocs(db, "users", user.uid, "posts").then((res) => {
-      //   // list(ref(storage, `users/${user.uid}/posts/r`));
-      //   console.log(res);
-      // });
+      const userInfos = await getDoc(doc(db, "users", user.id));
+      console.log(userInfos.data());
+      let following = [...userInfos.data().followed];
+      following.push(user.id);
+      let AllPosts = [];
+      await Promise.all(
+        following?.map(async (foll) => {
+          let usersPosts = await getDocs(
+            collection(db, "users", foll, "posts")
+          );
+          usersPosts.forEach((userPost) => {
+            AllPosts.push({ PostId: userPost.id, ...userPost.data() });
+          });
+        })
+      );
+      AllPosts.sort((a, b) => {
+        return b.time - a.time;
+      });
+      console.log("all posts", AllPosts);
+      return AllPosts;
     };
-    fetch();
+    fetch()
+      .then((res) => {
+        setPostss(res);
+      })
+      .then(() => {
+        console.log("postss", postss);
+      });
   }, []);
   return (
     <div>
@@ -33,13 +56,13 @@ function Posts() {
       )}
       <div>{/* storys */}</div>
       <div>
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
+        {
+          !!postss?.length &&
+            Object.values(postss).map((post, index) => (
+              <Post key={index} post={post} />
+            ))
+          // postss?.map((post, index) => <Post key={index} posts={post} />
+        }
       </div>
     </div>
   );

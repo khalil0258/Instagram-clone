@@ -54,7 +54,7 @@ function Profile() {
         setUserInfos(res);
         console.log(userInfos);
 
-        // checking if  the user followers includes the user id 
+        // checking if  the user followers includes the user id
         if (res?.followers.includes(user.id)) {
           setFollowed(true);
           console.log("true");
@@ -63,7 +63,7 @@ function Profile() {
         }
         dispatch(setComponentLoading(false));
       });
-      // cleanup function 
+      // cleanup function
       return () => {
         setUserInfos({});
       };
@@ -84,7 +84,7 @@ function Profile() {
             FollowChanger={FollowChanger}
           />
           {/* ............................... */}
-          <ProfilePosts />
+          <ProfilePosts infos={userInfos} userState={userState} />
         </HeaderHolder>
       )}
     </Fragment>

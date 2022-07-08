@@ -5,16 +5,16 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { userDetail } from "../../features/auth-state/auth-slice";
 import { db, storage } from "../../Firebase/Firebase";
 import { HeaderContainer } from "../global/ContainerSignup";
 import { getDownloadURL, ref } from "firebase/storage";
-import ProfilePost from "./ProfilePost";
 
-function ProfilePosts() {
+function ProfilePosts({ infos, userState }) {
   const [postss, setPostss] = useState([]);
+  console.log("infos", infos);
 
   const [profileStat, setProfileStat] = useState({
     post: "post",
@@ -25,10 +25,11 @@ function ProfilePosts() {
     const fetchProfileInfos = async () => {
       let postsArray = [];
       const q = query(
-        collection(db, "users", user.id, "posts"),
+        collection(db, "users", infos?.userId, "posts"),
         orderBy("time", "desc")
       );
       let posts = await getDocs(q);
+
       posts.forEach((element) => {
         postsArray.push(element.data());
       });
@@ -36,9 +37,9 @@ function ProfilePosts() {
     };
     fetchProfileInfos().then((res) => {
       setPostss(res);
-      console.log(res);
+      console.log("res", res);
     });
-  }, [profileStat]);
+  }, [profileStat, infos]);
 
   return (
     <HeaderContainer>
@@ -85,10 +86,39 @@ function ProfilePosts() {
           </div>
         </div>
         {/* posts section  */}
-        <div className="flex  items-start justify-between gap-y-2 flex-wrap">
-          {!!profileStat.post && !postss && <div id="posts">no posts yet</div>}
-          {!!profileStat.post &&
-            postss?.map((post) => <ProfilePost post={post} />)}
+        {!!profileStat.post && postss.length === 0 && (
+          <div
+            id="posts"
+            className="text-center capitalize font-sans font-medium text-xl relative top-12"
+          >
+            no posts
+          </div>
+        )}
+        <div className="flex  items-start justify-between gap-y-2 flex-wrap pb-24 ">
+          {
+            !!profileStat.post &&
+              postss.length != 0 &&
+              postss?.map((post) => (
+                <div className="w-[293px]  h-[293px] cursor-pointer relative">
+                  <img
+                    src={post.imageUrl}
+                    alt="profile Post"
+                    className="h-full w-full object-cover"
+                  />
+
+                  <div
+                    className="w-full h-full hover:bg-slate-600 absolute top-0 right-0 "
+                    style={{ opacity: "0.3", zIndex: 122 }}
+                  ></div>
+                </div>
+              ))
+            // <div
+            //   id="posts"
+            //   className="text-center capitalize font-sans font-medium text-xl relative top-12"
+            // >
+            //   yes posts
+            // </div>
+          }
         </div>
       </div>
     </HeaderContainer>

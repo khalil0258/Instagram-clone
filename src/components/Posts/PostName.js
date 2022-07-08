@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import PostSetingsModal from "./PostSetingsModal";
 
-function PostName() {
+function PostName(props) {
   const [showPostSetingsPortal, setShowPostSetingsPortal] = useState(false);
   const clicked = () => {
     setShowPostSetingsPortal(false);
@@ -12,13 +12,16 @@ function PostName() {
       {/* this is the profile img and the profile name  */}
       <div className="flex items-center">
         <img
-          src={require("../../assets/signupAssets/pic2.png")}
+          src={props.photoURL || require("../../assets/profile.png")}
           alt="profileImg"
           className="h-9 w-9 rounded-3xl object-cover mr-3 cursor-pointer "
         />
-        <h3 className="text-[15px] font-medium cursor-pointer">
-          khalil_____hjz
-        </h3>
+        <div>
+          <h3 className="text-[15px] font-medium cursor-pointer">
+            {props.userName}
+          </h3>
+          {props.location && <p>{props.location}</p>}
+        </div>
       </div>
       {/* the card setting */}
       <div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-function ImageHolder() {
+function ImageHolder(props) {
   return (
     <div className="w-full h-[400px] overflow-hidden">
       <div
@@ -10,7 +10,7 @@ function ImageHolder() {
         }}
       >
         <img
-          src={require("../../assets/signupAssets/pic.png")}
+          src={props.imageURL}
           alt="postImage"
           className="w-full h-full object-cover"
         />

@@ -11,16 +11,24 @@ function Post(props) {
   //     setLiked(true);
   //   };
 
+  console.log(props);
   return (
     <div className="w-full bg-white mb-5 border border-opacity-30  border-slate-500">
       {/* the first section :the name and profile img  */}
-      <PostName />
+      <PostName
+        userName={props?.post?.userName}
+        profileURL={props?.post?.profileImg}
+        location={props?.post?.location}
+      />
       {/* the second section :the post img or video  */}
-      <ImageHolder />
+      <ImageHolder imageURL={props.post.imageUrl} />
       {/* the third section :the post icons where we can share it or like and give it comment  */}
-      <IconsHolder />
+      <IconsHolder likes={props?.post?.likes} />
       {/* the forth section : the comment section*/}
-      <CommentSection />
+      <CommentSection
+        userName={props?.post?.userName}
+        description={props?.post?.description}
+      />
     </div>
   );
 }

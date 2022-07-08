@@ -4,7 +4,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 
-function IconsHolder() {
+function IconsHolder(props) {
   const [liked, setLiked] = useState(false);
 
   return (
@@ -29,16 +29,23 @@ function IconsHolder() {
       </div>
       {/* people liked this post  */}
       <div className="text-left pb-1">
-        <p>
-          Aime par
-          <span className="text-[15px] font-medium cursor-pointer mx-1">
-            {/* {firstLikes} */}
-          </span>
-          et
-          <span className="text-[15px] font-medium cursor-pointer mx-1">
-            autre personnes
-          </span>
-        </p>
+        {!!props?.likes?.length && (
+          <p>
+            Aime par
+            <span className="text-[15px] font-medium cursor-pointer mx-1">
+              {/* {firstLikes} */}
+              {props?.likes?.length ? "component plaaece" : ""}
+            </span>
+            {props?.likes?.length != 1 && (
+              <>
+                et
+                <span className="text-[15px] font-medium cursor-pointer mx-1">
+                  autre personnes
+                </span>
+              </>
+            )}
+          </p>
+        )}
       </div>
     </div>
   );

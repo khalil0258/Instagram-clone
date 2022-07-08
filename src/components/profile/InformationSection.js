@@ -8,8 +8,10 @@ import {
   addDoc,
   arrayRemove,
   arrayUnion,
+  collection,
   doc,
   getDoc,
+  getDocs,
   serverTimestamp,
   setDoc,
   Timestamp,
@@ -25,7 +27,24 @@ import { useNavigate } from "react-router";
 function InformationSection({ userState, followed, infos, FollowChanger }) {
   const user = useSelector(userDetail);
   console.log(infos);
+  const [postss, setPostss] = useState([]);
   document.title = infos.userName;
+  useEffect(() => {
+    const fetchPosts = async () => {
+      let postsArray = [];
+      const posts = await getDocs(
+        collection(db, "users", infos?.userId, "posts")
+      );
+      posts.forEach((post) => {
+        postsArray.push({ id: post.id, ...post.data() });
+      });
+      return postsArray;
+    };
+    fetchPosts().then((res) => {
+      setPostss(res);
+      console.log(res);
+    });
+  }, [infos]);
   return (
     <div>
       <HeaderContainer>
@@ -73,7 +92,9 @@ function InformationSection({ userState, followed, infos, FollowChanger }) {
             <div className="flex items-center">
               {/* posts number  */}
               <div className="font-normal text-md mr-14">
-                <span className="font-medium text-[16px] mr-1">1</span>
+                <span className="font-medium text-[16px] mr-1">
+                  {postss?.length}
+                </span>
                 posts
               </div>
               {/* followers number  */}

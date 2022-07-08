@@ -37,7 +37,10 @@ function Header() {
   };
 
   return (
-    <nav className="bg-white py-1 px-[20px] border border-b-[2px] border-slate-200 fixed top-0 left-0 right-0 ">
+    <nav
+      className="bg-white py-1 px-[20px] border border-b-[2px] border-slate-200 fixed top-0 left-0 right-0 "
+      style={{ zIndex: 1200 }}
+    >
       {/* header container that making him in the middle */}
       <HeaderContainer>
         <div className="flex items-center justify-between relative ">
