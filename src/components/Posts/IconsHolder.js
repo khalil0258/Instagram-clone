@@ -3,6 +3,8 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
+import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 
 function IconsHolder(props) {
   const [liked, setLiked] = useState(false);
@@ -20,8 +22,8 @@ function IconsHolder(props) {
               });
             }}
           />
-          <ExploreOutlinedIcon className="mr-2 cursor-pointer " />
-          <ExploreOutlinedIcon className="mr-2 cursor-pointer " />
+          <ChatBubbleOutlineOutlinedIcon className="mr-2 cursor-pointer " />
+          <SendOutlinedIcon className="mr-2 cursor-pointer transform -rotate-12 " />
         </div>
         <div>
           <MoreVertIcon className="cursor-pointer" />

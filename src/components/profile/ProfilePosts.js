@@ -10,8 +10,9 @@ import { useSelector } from "react-redux";
 import { userDetail } from "../../features/auth-state/auth-slice";
 import { db, storage } from "../../Firebase/Firebase";
 import { HeaderContainer } from "../global/ContainerSignup";
-import { getDownloadURL, ref } from "firebase/storage";
-
+// import { getDownloadURL, ref } from "firebase/storage";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ModeCommentIcon from "@mui/icons-material/ModeComment";
 function ProfilePosts({ infos, userState }) {
   const [postss, setPostss] = useState([]);
   console.log("infos", infos);
@@ -95,30 +96,34 @@ function ProfilePosts({ infos, userState }) {
           </div>
         )}
         <div className="flex  items-start justify-between gap-y-2 flex-wrap pb-24 ">
-          {
-            !!profileStat.post &&
-              postss.length != 0 &&
-              postss?.map((post) => (
-                <div className="w-[293px]  h-[293px] cursor-pointer relative">
-                  <img
-                    src={post.imageUrl}
-                    alt="profile Post"
-                    className="h-full w-full object-cover"
-                  />
+          {!!profileStat.post &&
+            postss.length != 0 &&
+            postss?.map((post) => (
+              <div className="w-[293px]  h-[293px] cursor-pointer relative">
+                <img
+                  src={post.imageUrl}
+                  alt="profile Post"
+                  className="h-full w-full object-cover"
+                />
 
-                  <div
-                    className="w-full h-full hover:bg-slate-600 absolute top-0 right-0 "
-                    style={{ opacity: "0.3", zIndex: 122 }}
-                  ></div>
+                <div
+                  className="w-full h-full hover:bg-slate-900 hover:text-white text-transparent absolute top-0 right-0 flex justify-center items-center "
+                  style={{ opacity: "0.4", zIndex: 122 }}
+                >
+                  <div className="flex gap-12 items-center">
+                    <div className="flex gap-1 ">
+                      <FavoriteIcon />
+                      {post.likes.length}
+                    </div>
+                    <div className="flex gap-1 ">
+                      <ModeCommentIcon />
+                      {/* comments length? */}
+                      {/* {post.likes.length} */}1
+                    </div>
+                  </div>
                 </div>
-              ))
-            // <div
-            //   id="posts"
-            //   className="text-center capitalize font-sans font-medium text-xl relative top-12"
-            // >
-            //   yes posts
-            // </div>
-          }
+              </div>
+            ))}
         </div>
       </div>
     </HeaderContainer>
