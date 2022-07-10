@@ -21,9 +21,16 @@ function Post(props) {
         location={props?.post?.location}
       />
       {/* the second section :the post img or video  */}
-      <ImageHolder imageURL={props.post.imageUrl} />
+      <ImageHolder
+        imageURL={props.post.imageUrl}
+        id={props.post?.userId}
+        postId={props.post?.PostId}
+      />
       {/* the third section :the post icons where we can share it or like and give it comment  */}
-      <IconsHolder likes={props?.post?.likes} />
+      <IconsHolder
+        likes={props?.post?.likes}
+    
+      />
       {/* the forth section : the comment section*/}
       <CommentSection
         userName={props?.post?.userName}
