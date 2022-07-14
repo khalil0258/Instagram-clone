@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
@@ -19,37 +19,33 @@ import { userDetail } from "../../features/auth-state/auth-slice";
 
 function IconsHolder(props) {
   const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState([]);
 
   const [firstLike, setFirstLike] = useState({});
   const user = useSelector(userDetail);
   let cc = props.likes[0] == user.id;
-  useState(() => {
-    // const fetchLikesPrifile = async () => {
-    //   const dat = await getDoc(
-    //     doc(db, "users", cc ? props.likes[1] : props.likes[0])
-    //   );
-    //   return dat.data();
-    // };
-    // fetchLikesPrifile().then((res) => {
-    //   setFirstLike(res);
-    // });
-    console.log(cc);
-    let unsubscribe = onSnapshot(
-      doc(
-        db,
-        "users",
-        cc && props.likes.length === 2 ? props.likes[1] : props?.likes[0]
-      ),
+  useEffect(() => {
+    onSnapshot(
+      doc(db, "users", props.id, "posts", props.postId),
       (querySnapshot) => {
-        setFirstLike(querySnapshot.data());
-        setLiked(props.likes.includes(props.id));
-        console.log("includes", props.likes.includes(props.id));
+        setLikes(querySnapshot?.data().likes);
+        setLiked(querySnapshot?.data().likes.includes(user.id));
+        // console.log("includes", querySnapshot.data());
+        // console.log(querySnapshot.data());
+        console.log(liked);
       }
     );
-
-    return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    const getProfile = async () => {
+      const get = await getDoc(doc(db, "users", props.likes[0]));
+      return get.data();
+    };
+    getProfile().then((res) => {
+      setFirstLike(res);
+    });
+  }, []);
   return (
     <div className="px-3 ">
       <div className="flex  items-center justify-between py-2">
@@ -58,23 +54,28 @@ function IconsHolder(props) {
           <FavoriteBorderOutlinedIcon
             className={`mr-2 cursor-pointer ${liked && "text-red-500"} `}
             onClick={async () => {
-              setLiked((prevState) => {
-                return !prevState;
-              });
-              if (liked) {
-                await updateDoc(
-                  doc(db, "users", props.id, "posts", props.postId),
-                  {
-                    likes: arrayUnion(user.id),
-                  }
-                );
-              } else {
-                await updateDoc(
-                  doc(db, "users", props.id, "posts", props.postId),
-                  {
-                    likes: arrayRemove(user.id),
-                  }
-                );
+              if (liked != undefined) {
+                if (!liked) {
+                  setLiked((prevState) => {
+                    return !prevState;
+                  });
+                  await updateDoc(
+                    doc(db, "users", props?.id, "posts", props?.postId),
+                    {
+                      likes: arrayUnion(user.id),
+                    }
+                  );
+                } else {
+                  setLiked((prevState) => {
+                    return !prevState;
+                  });
+                  await updateDoc(
+                    doc(db, "users", props?.id, "posts", props?.postId),
+                    {
+                      likes: arrayRemove(user.id),
+                    }
+                  );
+                }
               }
             }}
           />
@@ -92,11 +93,7 @@ function IconsHolder(props) {
             Aime par
             <span className="text-[15px] font-medium cursor-pointer mx-1">
               {/* {firstLikes} */}
-              {!props?.likes?.length
-                ? ""
-                : props?.likes?.length === 1 && cc
-                ? "Moi"
-                : firstLike?.userName}
+              {!!firstLike && liked ? "Moi" : firstLike?.userName}
             </span>
             {props?.likes?.length != 1 && (
               <>
@@ -114,3 +111,13 @@ function IconsHolder(props) {
 }
 
 export default IconsHolder;
+
+// const fetchLikesPrifile = async () => {
+//   const dat = await getDoc(
+//     doc(db, "users", cc ? props.likes[1] : props.likes[0])
+//   );
+//   return dat.data();
+// };
+// fetchLikesPrifile().then((res) => {
+//   setFirstLike(res);
+// });

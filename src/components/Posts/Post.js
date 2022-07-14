@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Comment from "./Comment";
 import CommentSection from "./CommentSection";
 import IconsHolder from "./IconsHolder";
 import ImageHolder from "./ImageHolder";
@@ -29,13 +30,15 @@ function Post(props) {
       {/* the third section :the post icons where we can share it or like and give it comment  */}
       <IconsHolder
         likes={props?.post?.likes}
-    
+        id={props.post?.userId}
+        postId={props.post?.PostId}
       />
       {/* the forth section : the comment section*/}
       <CommentSection
         userName={props?.post?.userName}
         description={props?.post?.description}
       />
+      <Comment id={props.post?.userId} postId={props.post?.PostId} />
     </div>
   );
 }
