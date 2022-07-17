@@ -39,7 +39,7 @@ function Header() {
   return (
     <nav
       className="bg-white py-1 px-[20px] border border-b-[2px] border-slate-200 fixed top-0 left-0 right-0 "
-      style={{ zIndex: 1200 }}
+      style={{ zIndex: 99 }}
     >
       {/* header container that making him in the middle */}
       <HeaderContainer>

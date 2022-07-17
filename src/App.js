@@ -24,18 +24,20 @@ import Profile from "./pages/profile/Profile";
 import Messages from "./pages/messages/Messages";
 import Message from "./components/messages/Message";
 import Inbox from "./components/messages/Inbox";
+import PostComment from "./components/postsComments/PostComment";
 
 function App() {
   const isAuth = useAuth();
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.auth.loading);
   useEffect(() => {
+    console.log(process.env);
     const fetchState = async () => {
       onAuthStateChanged(auth, (user) => {
         if (user) {
           // User is signed in, see docs for a list of available properties
           // https://firebase.google.com/docs/reference/js/firebase.User
-
+          console.log("from app");
           dispatch(
             loginWithEmail({
               user2: {

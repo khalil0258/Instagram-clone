@@ -12,7 +12,7 @@ function Post(props) {
   //     setLiked(true);
   //   };
 
-  console.log(props);
+  // console.log(props);
   return (
     <div className="w-full bg-white mb-5 border border-opacity-30  border-slate-500">
       {/* the first section :the name and profile img  */}
@@ -35,8 +35,14 @@ function Post(props) {
       />
       {/* the forth section : the comment section*/}
       <CommentSection
+        profileURL={props?.post?.profileImg}
+        location={props?.post?.location}
         userName={props?.post?.userName}
         description={props?.post?.description}
+        id={props.post?.userId}
+        postId={props.post?.PostId}
+        imageURL={props.post.imageUrl}
+        time={props.post.time}
       />
       <Comment id={props.post?.userId} postId={props.post?.PostId} />
     </div>

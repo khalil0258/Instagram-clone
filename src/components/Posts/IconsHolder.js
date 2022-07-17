@@ -38,6 +38,7 @@ function IconsHolder(props) {
   }, []);
 
   useEffect(() => {
+  
     const getProfile = async () => {
       const get = await getDoc(doc(db, "users", props.likes[0]));
       return get.data();
@@ -88,14 +89,14 @@ function IconsHolder(props) {
       </div>
       {/* people liked this post  */}
       <div className="text-left pb-1">
-        {!!props?.likes?.length && (
+        {!!likes?.length && (
           <p>
             Aime par
             <span className="text-[15px] font-medium cursor-pointer mx-1">
               {/* {firstLikes} */}
               {!!firstLike && liked ? "Moi" : firstLike?.userName}
             </span>
-            {props?.likes?.length != 1 && (
+            {likes?.length != 1 && (
               <>
                 et
                 <span className="text-[15px] font-medium cursor-pointer mx-1">
@@ -111,13 +112,3 @@ function IconsHolder(props) {
 }
 
 export default IconsHolder;
-
-// const fetchLikesPrifile = async () => {
-//   const dat = await getDoc(
-//     doc(db, "users", cc ? props.likes[1] : props.likes[0])
-//   );
-//   return dat.data();
-// };
-// fetchLikesPrifile().then((res) => {
-//   setFirstLike(res);
-// });

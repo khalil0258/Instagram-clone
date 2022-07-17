@@ -21,6 +21,7 @@ function Comment(props) {
           senderId: user.id,
           senderName: user.displayName,
           senderImg: user.photoURL,
+          likes:0
         }
       ).then(() => {
         setText("");
