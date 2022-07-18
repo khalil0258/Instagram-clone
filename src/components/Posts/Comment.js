@@ -21,7 +21,8 @@ function Comment(props) {
           senderId: user.id,
           senderName: user.displayName,
           senderImg: user.photoURL,
-          likes:0
+          likes: 0,
+          replies: 0,
         }
       ).then(() => {
         setText("");
@@ -29,7 +30,7 @@ function Comment(props) {
   };
 
   return (
-    <div className=" w-full mx-auto  py-3 px-2   bg-white border-t  flex items-center justify-start gap-4 shadow-sm">
+    <div className=" w-full mx-auto  py-3 px-2    border-t  flex items-center justify-start gap-4 ">
       <div className="relative">
         <SentimentSatisfiedAltIcon
           onClick={() => {
@@ -39,7 +40,7 @@ function Comment(props) {
           }}
         />
         {showEmogy && (
-          <div className="flex h-48 absolute bottom-11 -left-4 w-48 bg-white border shadow-sm flex-wrap overflow-scroll overflow-x-hidden cursor-pointer">
+          <div className="flex h-48 absolute bottom-11 -left-4 w-48 bg-white   shadow-sm flex-wrap overflow-scroll overflow-x-hidden cursor-pointer">
             {emogis.emojis.map((e, index) => (
               <span
                 key={index}

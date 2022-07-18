@@ -1,6 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { BackDrop } from "../global/MenuModal";
+import Comment from "../Posts/Comment";
+import IconsHolder from "../Posts/IconsHolder";
+import CommentsReveal from "./CommentsReveal";
+import IconsSection from "./IconsSection";
+import emogis from "../../textAssets/emogis.json";
+import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { userDetail } from "../../features/auth-state/auth-slice";
+import { useSelector } from "react-redux";
+import { db } from "../../Firebase/Firebase";
 
 function PostComment(props) {
   if (!props.open) {
@@ -23,7 +33,9 @@ function PostComment(props) {
             id={props.id}
             postId={props.postId}
             imageURL={props.imageURL}
-            time={props.time}
+            time={props?.time}
+            comments={props?.comments}
+            likes={props?.likes}
           />,
           document.getElementById("Othermodals")
         )}
@@ -33,8 +45,94 @@ function PostComment(props) {
 }
 
 export default PostComment;
+
+// .......................................
 const PostSection = (props) => {
-  console.log(props.profileURL);
+  const [text, setText] = useState("");
+  console.log(props.comments);
+  console.log(props);
+  const [showEmogy, setShowEmogy] = useState(false);
+  const user = useSelector(userDetail);
+  let newA =
+    props.description.trim() != ""
+      ? [
+          {
+            text: props.description,
+            time: props.time,
+            senderId: props.senderId,
+            senderName: props.userName,
+            senderImg: props.profileURL,
+            likes: 0,
+          },
+          ...props.comments,
+        ]
+      : [...props.comments];
+
+  let replier;
+
+  // function that push comments to db
+  const pushComment = async () => {
+    props.comments?.forEach((comment) => {
+      if (text.includes(`@${comment.senderName}`)) {
+        replier = {
+          parentCommentId: comment.id,
+          receiverId: comment.senderId,
+          receiverName: comment.senderName,
+          receiverImg: comment.senderimg,
+        };
+      }
+    });
+    if (!!replier?.receiverId) {
+      console.log("replier", replier);
+      addDoc(
+        collection(
+          db,
+          "users",
+          props.id,
+          "posts",
+          props.postId,
+          "comments",
+          replier.parentCommentId,
+          "subComments"
+        ),
+        {
+          text: text,
+          time: new serverTimestamp(),
+          senderId: user.id,
+          senderName: user.displayName,
+          senderImg: user.photoURL,
+          likes: 0,
+          parentCommentId: replier.parentCommentId,
+          receiverId: replier.receiverId,
+          receiverName: replier.receiverName,
+          receiverImg: replier.receiverImg || "",
+        }
+      ).then(() => {
+        setText("");
+      });
+    } else {
+      console.log("helllllllllllllll", props);
+      if (text.trim() != "")
+        addDoc(
+          collection(db, "users", props.id, "posts", props.postId, "comments"),
+          {
+            text: text,
+            time: new serverTimestamp(),
+            senderId: user.id,
+            senderName: user.displayName,
+            senderImg: user.photoURL,
+            likes: 0,
+            replies: 0,
+          }
+        ).then(() => {
+          setText("");
+        });
+    }
+  };
+  const tag = (value) => {
+    setText(value);
+  };
+
   return (
     <div
       style={{ zIndex: 2000 }}
@@ -49,9 +147,9 @@ const PostSection = (props) => {
         />
       </div>
       {/* this section is the right section  */}
-      <div className="w-1/2  h-full">
+      <div className="w-1/2  h-full relative ">
         {/* profile of the post user  */}
-        <div className="flex items-center justify-start h-[65px] w-full px-4 border-b ">
+        <div className="flex items-center justify-start h-[10vh] w-full px-4 border-b shadow-md ">
           <div className="flex items-start justify-start  gap-2">
             <img
               src={props?.profileURL || require("../../assets/profile.png")}
@@ -66,34 +164,62 @@ const PostSection = (props) => {
           </div>
         </div>
         {/* description and comments  */}
-        <div className="p-2">
-          <div id="description" className="flex items-center gap-2">
-            <img
-              src={props?.profileURL || require("../../assets/profile.png")}
-              alt="profile img"
-              className="h-11 w-11 rounded-full"
+        <div className="p-2 h-[53vh] overflow-scroll overflow-x-hidden">
+          {!!newA.length &&
+            newA.map((com, index) => (
+              <CommentsReveal key={index} main={com} tag={tag} />
+            ))}
+        </div>
+        {/* icons and likes section  */}
+        <div className="absolute bottom-0  left-0 right-0 h-[27vh] border-t">
+          <IconsSection
+            likes={props.likes}
+            id={props.id}
+            time={props.time}
+            postId={props.postId}
+          />
+
+          <div className=" w-full mx-auto  py-3 px-2    border-t relative top-3 flex items-center justify-start gap-4 ">
+            <div className="relative ">
+              <SentimentSatisfiedAltIcon
+                onClick={() => {
+                  setShowEmogy((prev) => {
+                    return !prev;
+                  });
+                }}
+              />
+              {showEmogy && (
+                <div className="flex h-48 absolute bottom-11 -left-4 w-48 bg-white   shadow-sm flex-wrap overflow-scroll overflow-x-hidden cursor-pointer">
+                  {emogis.emojis.map((e, index) => (
+                    <span
+                      key={index}
+                      onClick={() => {
+                        setText((prev) => {
+                          return prev + e.emoji;
+                        });
+                      }}
+                    >
+                      {e.emoji}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+            <input
+              value={text}
+              type="text"
+              onChange={(e) => {
+                setText(e.target.value);
+              }}
+              className="w-[75%] outline-none h-3/5   resize-none text-sm font-normal text-global "
             />
-            <div>
-              <div className="flex items-center justify-start gap-1">
-                <p className="font-medium text-[17px]">{props.userName}</p>
-                <p className="text-global text-[16px]">{props.description}</p>
-              </div>
-              <span className="text-gray-500 text-sm">
-                {Math.floor(
-                  (new Date() - new Date(props.time.toDate())) / 60000
-                ) > 60
-                  ? Math.floor(
-                      (new Date() - new Date(props.time.toDate())) / 3600000
-                    )
-                  : Math.floor(
-                      (new Date() - new Date(props.time.toDate())) / 60000
-                    )}
-                {Math.floor(
-                  (new Date() - new Date(props.time.toDate())) / 60000
-                ) > 60
-                  ? "hours"
-                  : "min"}
-              </span>
+            <div className="flex items-center gap-3 justify-center">
+              <p
+                className="text-blue-500 font-medium cursor-pointer"
+                onClick={pushComment}
+              >
+                send
+              </p>
             </div>
           </div>
         </div>

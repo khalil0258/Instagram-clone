@@ -13,6 +13,10 @@ function Post(props) {
   //   };
 
   // console.log(props);
+  const [open, setOpen] = useState(false);
+  const clicked = (value) => {
+    setOpen(value);
+  };
   return (
     <div className="w-full bg-white mb-5 border border-opacity-30  border-slate-500">
       {/* the first section :the name and profile img  */}
@@ -29,20 +33,25 @@ function Post(props) {
       />
       {/* the third section :the post icons where we can share it or like and give it comment  */}
       <IconsHolder
+        open={open}
+        clicked={clicked}
         likes={props?.post?.likes}
         id={props.post?.userId}
         postId={props.post?.PostId}
       />
       {/* the forth section : the comment section*/}
       <CommentSection
+        open={open}
+        clicked={clicked}
         profileURL={props?.post?.profileImg}
         location={props?.post?.location}
         userName={props?.post?.userName}
         description={props?.post?.description}
         id={props.post?.userId}
         postId={props.post?.PostId}
-        imageURL={props.post.imageUrl}
-        time={props.post.time}
+        imageURL={props.post?.imageUrl}
+        time={props.post?.time}
+        likes={props?.post?.likes}
       />
       <Comment id={props.post?.userId} postId={props.post?.PostId} />
     </div>

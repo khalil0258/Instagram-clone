@@ -108,7 +108,7 @@ function ProfilePosts({ infos, userState }) {
 
                 <div
                   className="w-full h-full hover:bg-slate-900 hover:text-white text-transparent absolute top-0 right-0 flex justify-center items-center "
-                  style={{ opacity: "0.4", zIndex: 122 }}
+                  style={{ opacity: "0.4", zIndex: 80 }}
                 >
                   <div className="flex gap-12 items-center">
                     <div className="flex gap-1 ">

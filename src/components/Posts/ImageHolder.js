@@ -12,7 +12,7 @@ function ImageHolder(props) {
       <div
         className="h-full cursor-pointer relative "
         onDoubleClick={async () => {
-          console.log("here we go again");
+          // console.log("here we go again");
           setShowHeart(true);
           setTimeout(() => {
             setShowHeart(false);

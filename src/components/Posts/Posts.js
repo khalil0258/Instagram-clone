@@ -14,7 +14,7 @@ function Posts() {
   useEffect(() => {
     const fetch = async () => {
       const userInfos = await getDoc(doc(db, "users", user.id));
-      console.log(userInfos.data());
+      // console.log(userInfos.data());
       let following = [...userInfos.data().followed];
       following.push(user.id);
       let AllPosts = [];
@@ -31,7 +31,7 @@ function Posts() {
       AllPosts.sort((a, b) => {
         return b.time - a.time;
       });
-      console.log("all posts", AllPosts);
+      // console.log("all posts", AllPosts);
       return AllPosts;
     };
     fetch()
@@ -39,7 +39,7 @@ function Posts() {
         setPostss(res);
       })
       .then(() => {
-        console.log("postss", postss);
+        // console.log("postss", postss);
       });
   }, []);
   return (

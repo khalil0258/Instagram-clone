@@ -7,27 +7,40 @@ import CommentBefore from "./CommentBefore";
 
 function CommentSection(props) {
   const [comments, setComments] = useState([]);
-  const [open, setOpen] = useState(false);
-  const clicked = () => {
-    setOpen(false);
-  };
+
   useEffect(() => {
-    onSnapshot(
-      query(
-        collection(db, "users", props.id, "posts", props.postId, "comments"),
-        orderBy("time", "asc")
-      ),
-      (querySnapshot) => {
-        let com = [];
-        // console.log(querySnapshot.docs[0].data());
-        querySnapshot.docs.forEach((q) => {
-          com.push({ id: q.id, ...q.data() });
-        });
-        setComments(com);
-      }
-    );
+    const fetchComments = async () => {
+      await Promise.all(
+        onSnapshot(
+          query(
+            collection(
+              db,
+              "users",
+              props.id,
+              "posts",
+              props.postId,
+              "comments"
+            ),
+            orderBy("time", "asc")
+          ),
+          (querySnapshot) => {
+            let com = [];
+            let sub = [];
+            // console.log(querySnapshot.docs[0].data());
+            querySnapshot.docs.forEach((q) => {
+              // com.push({ id: q.id, ...q.data() });
+              console.log(q.id);
+
+              com.push({ id: q.id, ...q.data() });
+            });
+            setComments(com);
+          }
+        )
+      );
+    };
+    fetchComments();
   }, []);
-  // console.log(props);
+  console.log("comments", comments);
   return (
     <div className="px-3 pb-4">
       <CommentBefore name={props.userName} description={props.description} />
@@ -35,7 +48,7 @@ function CommentSection(props) {
       <div
         className="text-left color-global text-sm pb-1 cursor-pointer"
         onClick={() => {
-          setOpen(true);
+          props.clicked(true);
         }}
       >
         {/* in process */}
@@ -60,8 +73,8 @@ function CommentSection(props) {
         )}
       </div>
       <PostComment
-        open={open}
-        clicked={clicked}
+        open={props.open}
+        clicked={props.clicked}
         profileURL={props?.profileURL}
         location={props?.location}
         userName={props?.userName}
@@ -69,7 +82,9 @@ function CommentSection(props) {
         id={props.id}
         postId={props.postId}
         imageURL={props.imageURL}
-        time={props.time}
+        time={props?.time}
+        comments={comments}
+        likes={props?.likes}
       />
     </div>
   );

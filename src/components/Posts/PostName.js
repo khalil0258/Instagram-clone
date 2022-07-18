@@ -28,7 +28,7 @@ function PostName(props) {
         <MoreHorizIcon
           className="cursor-pointer"
           onClick={() => {
-            console.log("hello");
+            // console.log("hello");
             setShowPostSetingsPortal((prevState) => {
               return !prevState;
             });
