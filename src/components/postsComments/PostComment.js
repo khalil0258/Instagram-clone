@@ -7,7 +7,14 @@ import CommentsReveal from "./CommentsReveal";
 import IconsSection from "./IconsSection";
 import emogis from "../../textAssets/emogis.json";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  increment,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { userDetail } from "../../features/auth-state/auth-slice";
 import { useSelector } from "react-redux";
 import { db } from "../../Firebase/Firebase";
@@ -72,7 +79,7 @@ const PostSection = (props) => {
 
   // function that push comments to db
   const pushComment = async () => {
-    props.comments?.forEach((comment) => {
+    props.comments?.every((comment) => {
       if (text.includes(`@${comment.senderName}`)) {
         replier = {
           parentCommentId: comment.id,
@@ -80,6 +87,7 @@ const PostSection = (props) => {
           receiverName: comment.senderName,
           receiverImg: comment.senderimg,
         };
+        return false;
       }
     });
     if (!!replier?.receiverId) {
@@ -107,9 +115,26 @@ const PostSection = (props) => {
           receiverName: replier.receiverName,
           receiverImg: replier.receiverImg || "",
         }
-      ).then(() => {
-        setText("");
-      });
+      )
+        .then(() => {
+          updateDoc(
+            doc(
+              db,
+              "users",
+              props.id,
+              "posts",
+              props.postId,
+              "comments",
+              replier.parentCommentId
+            ),
+            {
+              replies: increment(1),
+            }
+          );
+        })
+        .then(() => {
+          setText("");
+        });
     } else {
       console.log("helllllllllllllll", props);
       if (text.trim() != "")
