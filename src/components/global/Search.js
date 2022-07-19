@@ -26,9 +26,7 @@ const Profiles = ({ users }) => {
           }}
         >
           <img
-            src={
-              user.profileImage || require("../../assets/signupAssets/my.jpg")
-            }
+            src={user.profileImage || require("../../assets/profile.png")}
             alt=""
             className="h-10 w-10 rounded-full "
           />

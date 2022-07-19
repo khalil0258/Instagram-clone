@@ -54,7 +54,7 @@ function InformationSection({ userState, followed, infos, FollowChanger }) {
             <img
               src={
                 (infos && infos?.profileImage) ||
-                require("../../assets/signupAssets/my.jpg")
+                require("../../assets/profile.png")
               }
               alt="profile image"
               className=" h-3/5  object-cover rounded-full md:h-full"

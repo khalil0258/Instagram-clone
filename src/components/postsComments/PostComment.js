@@ -60,6 +60,10 @@ const PostSection = (props) => {
   console.log(props);
   const [showEmogy, setShowEmogy] = useState(false);
   const user = useSelector(userDetail);
+  const [index, setIndex] = useState();
+  const setInd = (v) => {
+    setIndex(v);
+  };
   let newA =
     props.description.trim() != ""
       ? [
@@ -82,10 +86,10 @@ const PostSection = (props) => {
     props.comments?.every((comment) => {
       if (text.includes(`@${comment.senderName}`)) {
         replier = {
-          parentCommentId: comment.id,
-          receiverId: comment.senderId,
-          receiverName: comment.senderName,
-          receiverImg: comment.senderimg,
+          parentCommentId: props.comments[index].id,
+          receiverId: props.comments[index].senderId,
+          receiverName: props.comments[index].senderName,
+          receiverImg: props.comments[index].senderimg,
         };
         return false;
       }
@@ -192,7 +196,13 @@ const PostSection = (props) => {
         <div className="p-2 h-[53vh] overflow-scroll overflow-x-hidden">
           {!!newA.length &&
             newA.map((com, index) => (
-              <CommentsReveal key={index} main={com} tag={tag} />
+              <CommentsReveal
+                key={index}
+                main={com}
+                tag={tag}
+                in={index}
+                setIndex={setInd}
+              />
             ))}
         </div>
         {/* icons and likes section  */}

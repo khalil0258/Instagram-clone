@@ -1,4 +1,4 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import React, { useState } from "react";
 import { db } from "../../Firebase/Firebase";
 
@@ -15,15 +15,18 @@ function CommentsReveal(props) {
     console.log(replies);
     if (!showReplies && cond) {
       let snapi = await getDocs(
-        collection(
-          db,
-          "users",
-          props?.main?.userId,
-          "posts",
-          props?.main?.postId,
-          "comments",
-          props?.main?.id,
-          "subComments"
+        query(
+          collection(
+            db,
+            "users",
+            props?.main?.userId,
+            "posts",
+            props?.main?.postId,
+            "comments",
+            props?.main?.id,
+            "subComments"
+          ),
+          orderBy("time", "asc")
         )
       );
       let rep = [];
@@ -77,6 +80,7 @@ function CommentsReveal(props) {
               className="text-gray-500 text-sm font-medium cursor-pointer"
               onClick={() => {
                 props.tag("@" + props.main.senderName);
+                props.setIndex(props.in - 1);
               }}
             >
               Repondre
@@ -95,7 +99,7 @@ function CommentsReveal(props) {
           }}
         >
           {showReplies ? "Masquer" : "Afficher"} les reponses (
-          {  props?.main.replies})
+          {props?.main.replies})
         </div>
       )}
       {showReplies && !!replies?.length && (
@@ -146,6 +150,7 @@ function CommentsReveal(props) {
                       className="text-gray-500 text-sm font-medium cursor-pointer"
                       onClick={() => {
                         props.tag("@" + rep?.senderName);
+                        props.setIndex(props.in - 1);
                       }}
                     >
                       Repondre
