@@ -17,15 +17,14 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../../Firebase/Firebase";
-import { useSelector } from "react-redux";
-import { userDetail } from "../../features/auth-state/auth-slice";
+import { auth, db } from "../../Firebase/Firebase";
+
 import Unfollow from "./Unfollow";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 // ...........................
 function InformationSection({ userState, followed, infos, FollowChanger }) {
-  const user = useSelector(userDetail);
   console.log(infos);
   const [postss, setPostss] = useState([]);
   document.title = infos.userName;
@@ -77,13 +76,13 @@ function InformationSection({ userState, followed, infos, FollowChanger }) {
                   }
                   FollowChanger={FollowChanger}
                   infos={infos}
-                  user={user}
+                  user={auth.currentUser}
                 />
               ) : (
                 // profile of not followed user
                 <NotFollowed
                   id={infos.userId}
-                  user={user}
+                  user={auth.currentUser}
                   FollowChanger={FollowChanger}
                 />
               )}
@@ -115,14 +114,12 @@ function InformationSection({ userState, followed, infos, FollowChanger }) {
             {/* ////////////////////////////////////// */}
             {/* now the description section */}
             <div className="mt-6">
-              <p className="text-md ">
-                jest-dom adds custom jest matchers for asserting on DOM nodes.
-                allows you to do things like:
-              </p>
+              <p className="text-md ">{infos?.profileDescription}</p>
             </div>
           </div>
         </div>
         {/* now saved stories section  */}
+
         <div>now saved stories section</div>
       </HeaderContainer>
     </div>
@@ -135,23 +132,42 @@ const Followed = (props) => {
   const clicked = () => {
     setShowMenu(false);
   };
-  console.log(props.infos);
+
   return (
     <div className="flex ">
       <button
         className="px-1 capitalize  mr-2 text-sm font-medium  border border-black border-opacity-20 rounded-sm "
         onClick={async () => {
+          console.log(auth.currentUser.uid, "fffff", props.infos.userId);
           await setDoc(
-            doc(db, "users", props.user.id, "rooms", props.infos.userId),
+            doc(db, "users", auth.currentUser.uid, "rooms", props.infos.userId),
             {
               id: props.infos.userId,
               userName: props.infos.userName,
               photoURL: props.infos.profileImage,
               time: new serverTimestamp(),
             }
-          ).then(() => {
-            navigate(`/direct/${props.id}`);
-          });
+          )
+            .then(async () => {
+              await setDoc(
+                doc(
+                  db,
+                  "users",
+                  props.infos.userId,
+                  "rooms",
+                  auth.currentUser.uid
+                ),
+                {
+                  id: auth.currentUser.uid,
+                  userName: props.user.displayName,
+                  photoURL: props.user.photoURL,
+                  time: new serverTimestamp(),
+                }
+              );
+            })
+            .then(() => {
+              navigate(`/direct/${props.infos?.userId}`);
+            });
         }}
       >
         Message
@@ -184,9 +200,11 @@ const Followed = (props) => {
 const CurrentUser = () => {
   return (
     <div>
-      <button className="px-1 capitalize  mr-2 text-sm font-medium  border border-black border-opacity-20 rounded-sm cursor-pointer ">
-        edit Profile
-      </button>
+      <Link to="/account/edit">
+        <button className="px-1 capitalize  mr-2 text-sm font-medium  border border-black border-opacity-20 rounded-sm cursor-pointer ">
+          edit Profile
+        </button>
+      </Link>
       <SettingsIcon className="cursor-pointer" />
     </div>
   );
@@ -194,7 +212,7 @@ const CurrentUser = () => {
 const NotFollowed = (props) => {
   const [follow, setFollow] = useState();
   const fetchFollow = async () => {
-    const docum = await getDoc(doc(db, "users", props.user.id));
+    const docum = await getDoc(doc(db, "users", props.user.uid));
     return docum.data();
   };
 
@@ -218,11 +236,11 @@ const NotFollowed = (props) => {
         onClick={async () => {
           props.FollowChanger(true);
           // update doc .array de followers
-          await updateDoc(doc(db, "users", props.user.id), {
+          await updateDoc(doc(db, "users", props.user.uid), {
             followed: arrayUnion(props.id),
           }).then(async () => {
             await updateDoc(doc(db, "users", props.id), {
-              followers: arrayUnion(props.user.id),
+              followers: arrayUnion(props.user.uid),
             });
           });
 

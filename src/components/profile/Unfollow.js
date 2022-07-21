@@ -45,11 +45,11 @@ const UnfollowModel = (props) => {
           className="text-red-600 font-medium h-full w-full "
           onClick={async () => {
             props.FollowChanger(false);
-            await updateDoc(doc(db, "users", props.user.id), {
+            await updateDoc(doc(db, "users", props.user.uid), {
               followed: arrayRemove(props.id),
             }).then(async () => {
               await updateDoc(doc(db, "users", props.id), {
-                followers: arrayRemove(props.user.id),
+                followers: arrayRemove(props.user.uid),
               });
             });
           }}

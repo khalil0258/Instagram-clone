@@ -3,9 +3,8 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { useSelector } from "react-redux";
-import { userDetail } from "../../features/auth-state/auth-slice";
-import { db } from "../../Firebase/Firebase";
+
+import { auth, db } from "../../Firebase/Firebase";
 import {
   arrayRemove,
   arrayUnion,
@@ -21,14 +20,16 @@ function IconsSection(props) {
   const [likes, setLikes] = useState([...props?.likes]);
 
   const [firstLike, setFirstLike] = useState({});
-  const user = useSelector(userDetail);
-  const [liked, setLiked] = useState(props.likes.includes(user.id));
+
+  const [liked, setLiked] = useState(
+    props.likes.includes(auth.currentUser.uid)
+  );
   useEffect(() => {
     onSnapshot(
       doc(db, "users", props.id, "posts", props.postId),
       (querySnapshot) => {
         setLikes(querySnapshot?.data().likes);
-        setLiked(querySnapshot?.data().likes.includes(user.id));
+        setLiked(querySnapshot?.data().likes.includes(auth.currentUser.uid));
         // console.log("includes", querySnapshot.data());
         // console.log(querySnapshot.data());
       }
@@ -60,7 +61,7 @@ function IconsSection(props) {
                 await updateDoc(
                   doc(db, "users", props?.id, "posts", props?.postId),
                   {
-                    likes: arrayUnion(user.id),
+                    likes: arrayUnion(auth.currentUser.uid),
                   }
                 );
               } else {
@@ -71,7 +72,7 @@ function IconsSection(props) {
                 await updateDoc(
                   doc(db, "users", props?.id, "posts", props?.postId),
                   {
-                    likes: arrayRemove(user.id),
+                    likes: arrayRemove(auth.currentUser.uid),
                   }
                 );
               }

@@ -15,9 +15,8 @@ import {
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
-import { userDetail } from "../../features/auth-state/auth-slice";
-import { useSelector } from "react-redux";
-import { db } from "../../Firebase/Firebase";
+
+import { auth, db } from "../../Firebase/Firebase";
 
 function PostComment(props) {
   if (!props.open) {
@@ -59,7 +58,7 @@ const PostSection = (props) => {
   console.log(props.comments);
   console.log(props);
   const [showEmogy, setShowEmogy] = useState(false);
-  const user = useSelector(userDetail);
+
   const [index, setIndex] = useState();
   const setInd = (v) => {
     setIndex(v);
@@ -110,9 +109,9 @@ const PostSection = (props) => {
         {
           text: text,
           time: new serverTimestamp(),
-          senderId: user.id,
-          senderName: user.displayName,
-          senderImg: user.photoURL,
+          senderId: auth.currentUser.uid,
+          senderName: auth.currentUser.displayName,
+          senderImg: auth.currentUser.photoURL,
           likes: 0,
           parentCommentId: replier.parentCommentId,
           receiverId: replier.receiverId,
@@ -147,9 +146,9 @@ const PostSection = (props) => {
           {
             text: text,
             time: new serverTimestamp(),
-            senderId: user.id,
-            senderName: user.displayName,
-            senderImg: user.photoURL,
+            senderId: auth.currentUser.uid,
+            senderName: auth.currentUser.displayName,
+            senderImg: auth.currentUser.photoURL,
             likes: 0,
             replies: 0,
           }

@@ -2,14 +2,11 @@ import React, { useState } from "react";
 import emogis from "../../textAssets/emogis.json";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import { addDoc, collection, doc, serverTimestamp } from "firebase/firestore";
-import { db } from "../../Firebase/Firebase";
-import { useSelector } from "react-redux";
-import { userDetail } from "../../features/auth-state/auth-slice";
+import { auth, db } from "../../Firebase/Firebase";
 
 function Comment(props) {
   const [text, setText] = useState("");
   const [showEmogy, setShowEmogy] = useState(false);
-  const user = useSelector(userDetail);
 
   const pushComment = async () => {
     if (text.trim() != "")
@@ -18,9 +15,9 @@ function Comment(props) {
         {
           text: text,
           time: new serverTimestamp(),
-          senderId: user.id,
-          senderName: user.displayName,
-          senderImg: user.photoURL,
+          senderId: auth.currentUser.uid,
+          senderName: auth.currentUser.displayName,
+          senderImg: auth.currentUser.photoURL,
           likes: 0,
           replies: 0,
         }

@@ -13,9 +13,8 @@ import {
   onSnapshot,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../../Firebase/Firebase";
-import { useSelector } from "react-redux";
-import { userDetail } from "../../features/auth-state/auth-slice";
+import { auth, db } from "../../Firebase/Firebase";
+
 import BookmarkAddedOutlinedIcon from "@mui/icons-material/BookmarkAddedOutlined";
 
 function IconsHolder(props) {
@@ -23,14 +22,14 @@ function IconsHolder(props) {
   const [likes, setLikes] = useState([]);
 
   const [firstLike, setFirstLike] = useState({});
-  const user = useSelector(userDetail);
-  let cc = props.likes[0] == user.id;
+
+  let cc = props.likes[0] == auth.currentUser.id;
   useEffect(() => {
     onSnapshot(
       doc(db, "users", props.id, "posts", props.postId),
       (querySnapshot) => {
         setLikes(querySnapshot?.data().likes);
-        setLiked(querySnapshot?.data().likes.includes(user.id));
+        setLiked(querySnapshot?.data().likes.includes(auth.currentUser.uid));
         // console.log("includes", querySnapshot.data());
         // console.log(querySnapshot.data());
         // console.log(liked);
@@ -63,7 +62,7 @@ function IconsHolder(props) {
                   await updateDoc(
                     doc(db, "users", props?.id, "posts", props?.postId),
                     {
-                      likes: arrayUnion(user.id),
+                      likes: arrayUnion(auth.currentUser.uid),
                     }
                   );
                 } else {
@@ -73,7 +72,7 @@ function IconsHolder(props) {
                   await updateDoc(
                     doc(db, "users", props?.id, "posts", props?.postId),
                     {
-                      likes: arrayRemove(user.id),
+                      likes: arrayRemove(auth.currentUser.uid),
                     }
                   );
                 }

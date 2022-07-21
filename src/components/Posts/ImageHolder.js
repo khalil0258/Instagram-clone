@@ -1,12 +1,11 @@
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { userDetail } from "../../features/auth-state/auth-slice";
-import { db } from "../../Firebase/Firebase";
+
+import { auth, db } from "../../Firebase/Firebase";
 
 function ImageHolder(props) {
   const [showHeart, setShowHeart] = useState(false);
-  const user = useSelector(userDetail);
+
   return (
     <div className="w-full h-[400px] overflow-hidden">
       <div
@@ -18,7 +17,7 @@ function ImageHolder(props) {
             setShowHeart(false);
           }, 200);
           await updateDoc(doc(db, "users", props.id, "posts", props.postId), {
-            likes: arrayUnion(user.id),
+            likes: arrayUnion(auth.currentUser.uid),
           });
         }}
       >

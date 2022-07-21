@@ -133,6 +133,7 @@ function SingUp() {
         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
         // const credential = FacebookAuthProvider.credentialFromResult(result);
         // const accessToken = credential.accessToken;
+
         const docRef = await getDoc(doc(db, "users", user.uid));
         if (!docRef.exists()) {
           await setDoc(doc(db, "users", user.uid), {

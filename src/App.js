@@ -25,6 +25,7 @@ import Messages from "./pages/messages/Messages";
 import Message from "./components/messages/Message";
 import Inbox from "./components/messages/Inbox";
 import PostComment from "./components/postsComments/PostComment";
+import EditPro from "./components/profile/edit profile/EditPro";
 
 function App() {
   const isAuth = useAuth();
@@ -79,6 +80,7 @@ function App() {
             <Route path="inbox" element={<Inbox />} />
             <Route path=":id" element={<Message />} />
           </Route>
+          <Route path="account/edit" element={<EditPro />} exact />
         </Route>
       </Routes>
     </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useSelector } from "react-redux";
-import { userDetail } from "../../features/auth-state/auth-slice";
+
 import {
   addDoc,
   collection,
@@ -10,14 +10,14 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { db, storage } from "../../Firebase/Firebase";
+import { auth, db, storage } from "../../Firebase/Firebase";
 import { v4 as uuidv4 } from "uuid";
 
 function DescriptionSection(props) {
   const [imgg, setImgg] = useState();
   const [inputPlace, setInputPlace] = useState();
   const [description, setDescription] = useState("");
-  const user = useSelector(userDetail);
+
   const idGenerated = uuidv4();
   //   in this useEffect i convert file fake path to file
 
@@ -34,23 +34,29 @@ function DescriptionSection(props) {
     if (props.img == null) return alert("error");
     // alert("imgAded");
 
-    const imageRef = ref(storage, `users/${user.id}/posts/${idGenerated}.jpg`);
+    const imageRef = ref(
+      storage,
+      `users/${auth.currentUser.uid}/posts/${idGenerated}.jpg`
+    );
     await uploadBytes(imageRef, props.img)
       .then(() => {
         getDownloadURL(
-          ref(storage, `users/${user.id}/posts/${idGenerated}.jpg`)
+          ref(storage, `users/${auth.currentUser.uid}/posts/${idGenerated}.jpg`)
         ).then(async (url) => {
           console.log(url);
-          await setDoc(doc(db, "users", user.id, "posts", idGenerated), {
-            userName: user.displayName,
-            userId: user.id,
-            profileImg: user.photoURL,
-            likes: [],
-            imageUrl: url || "",
-            description: description || "",
-            location: inputPlace || "",
-            time: new serverTimestamp(),
-          }).then(() => {
+          await setDoc(
+            doc(db, "users", auth.currentUser.uid, "posts", idGenerated),
+            {
+              userName: auth.currentUser.displayName,
+              userId: auth.currentUser.uid,
+              profileImg: auth.currentUser.photoURL,
+              likes: [],
+              imageUrl: url || "",
+              description: description || "",
+              location: inputPlace || "",
+              time: new serverTimestamp(),
+            }
+          ).then(() => {
             alert("imgAdded");
             props.clicked();
           });
@@ -94,8 +100,7 @@ function DescriptionSection(props) {
               className="h-10 w-10 rounded-3xl "
             />
             <h3 className="text-[15px] font-medium text-global cursor-pointer">
-              {/* {user.displayName } */}
-              khalil_____hjz
+              {auth.currentUser.displayName}
             </h3>
           </div>
           {/* div that display the input

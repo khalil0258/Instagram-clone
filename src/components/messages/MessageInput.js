@@ -16,14 +16,14 @@ import { ref, uploadBytes } from "firebase/storage";
 function MessageInput(props) {
   const [text, setText] = useState("");
   const [showEmogy, setShowEmogy] = useState(false);
-  const [img, setImg] = useState("");
-
+  // const [img, setImg] = useState({});
+  // console.log("prosp", props);
   const pushMessage = async () => {
     addDoc(
       collection(
         db,
         "users",
-        props.user.id,
+        props.user.uid,
         "rooms",
         props.pathName,
         "messages"
@@ -32,7 +32,7 @@ function MessageInput(props) {
         type: "text",
         message: text,
         time: new serverTimestamp(),
-        senderId: props.user.id,
+        senderId: props.user.uid,
         senderImg: props.user.photoURL,
         seen: true,
       }
@@ -44,14 +44,14 @@ function MessageInput(props) {
             "users",
             props.pathName,
             "rooms",
-            props.user.id,
+            props.user.uid,
             "messages"
           ),
           {
             type: "text",
             message: text,
             time: new serverTimestamp(),
-            senderId: props.user.id,
+            senderId: props.user.uid,
             senderImg: props.user.photoURL,
             seen: false,
           }
@@ -59,27 +59,30 @@ function MessageInput(props) {
       })
       .then(async () => {
         await updateDoc(
-          doc(db, "users", props.pathName, "rooms", props.user.id),
-          {
-            lastMessage: text,
-          }
-        ).then(() => {
-          setText("");
+          doc(db, "users", props.pathName, "rooms", props.user.uid),
+          { seen: false, lastMessage: text }
+        ).then(async () => {
+          await updateDoc(
+            doc(db, "users", props.user.uid, "rooms", props.pathName),
+            { lastMessage: text }
+          ).then(() => {
+            setText("");
+          });
         });
       });
   };
 
   // adding img function
-  const uploadImg = async () => {
-    if (img !== undefined) {
+  const uploadImg = async (img) => {
+    if (img != undefined) {
       // alert("imgAded");
       const imageRef2 = ref(
         storage,
-        `users/${props.pathName}/messages/${props.user.id}/${img.name}`
+        `users/${props.pathName}/messages/${props.user.uid}/${img.name}`
       );
       const imageRef = ref(
         storage,
-        `users/${props.user.id}/messages/${props.pathName}/${img.name}`
+        `users/${props.user.uid}/messages/${props.pathName}/${img.name}`
       );
       await uploadBytes(imageRef, img)
         .then(async () => {
@@ -90,17 +93,17 @@ function MessageInput(props) {
             collection(
               db,
               "users",
-              props.user.id,
+              props?.user.uid,
               "rooms",
-              props.pathName,
+              props?.pathName,
               "messages"
             ),
             {
               type: "image",
               message: img.name,
               time: new serverTimestamp(),
-              senderId: props.user.id,
-              senderImg: props.user.photoURL,
+              senderId: props.user.uid,
+              senderImg: props.user.photoURL || "",
               seen: true,
             }
           );
@@ -112,22 +115,28 @@ function MessageInput(props) {
               "users",
               props.pathName,
               "rooms",
-              props.user.id,
+              props.user.uid,
               "messages"
             ),
             {
               type: "image",
-              message: img.name,
+              message: img?.name,
               time: new serverTimestamp(),
-              senderId: props.user.id,
-              senderImg: props.user.photoURL,
+              senderId: props.user.uid,
+              senderImg: props.user.photoURL || "",
               seen: false,
             }
           );
         })
         .then(async () => {
           await updateDoc(
-            collection(db, "users", props.pathName, "rooms", props.user.id),
+            doc(db, "users", props.pathName, "rooms", props.user.uid),
+            { seen: false, lastMessage: text }
+          );
+        })
+        .then(async () => {
+          await updateDoc(
+            doc(db, "users", props.user.uid, "rooms", props.pathName),
             {
               lastMessage: text,
             }
@@ -135,6 +144,7 @@ function MessageInput(props) {
         })
         .then(() => {
           alert("image added");
+          // setImg();
         })
         .catch((err) => {
           alert(err.message);
@@ -195,10 +205,11 @@ function MessageInput(props) {
                 className="hidden"
                 id="file-input"
                 onInput={(e) => {
-                  setImg(e.target.files[0]);
-                  if (img != undefined) {
-                    console.log(img);
-                    uploadImg();
+                  // setImg(e.target.files[0]);
+
+                  if (e.target.files[0] != undefined) {
+                    // console.log("iiiiiiiiiiiih", img);
+                    uploadImg(e.target.files[0]);
                   }
                 }}
               />

@@ -7,9 +7,9 @@ import ReactDOM from "react-dom";
 import { HeaderContainer } from "./ContainerSignup";
 import { signOut } from "firebase/auth";
 import { auth } from "../../Firebase/Firebase";
-import { setLoading, userDetail } from "../../features/auth-state/auth-slice";
+import { setLoading } from "../../features/auth-state/auth-slice";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setProfileId } from "../../features/profileSlice/Profile-Slice";
 
 export const BackDrop = (props) => {
@@ -27,7 +27,6 @@ export const BackDrop = (props) => {
 };
 function MenuModal(props) {
   const dispatch = useDispatch();
-  const user = useSelector(userDetail);
   if (!props.open) {
     return null;
   } else {
@@ -50,9 +49,9 @@ function MenuModal(props) {
                 <div className="bg-white modal">
                   <ul>
                     <Link
-                      to={`/${user.displayName}`}
+                      to={`/${auth.currentUser.displayName}`}
                       onClick={() => {
-                        dispatch(setProfileId({ id: user.id }));
+                        dispatch(setProfileId({ id: auth.currentUser.uid }));
                       }}
                     >
                       <li className="flex p-2 hover:bg-gray-200 cursor-pointer">

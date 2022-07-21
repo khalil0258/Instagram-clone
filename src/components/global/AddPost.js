@@ -59,7 +59,7 @@ const ShowImg = (props) => {
 const AddImg = (props) => {
   const [img, setImg] = useState();
   const [last, setLast] = useState(false);
-  const user = useSelector(userDetail);
+
   //   console.log(user.uid);
   const imageSetter = (value) => {
     setImg(value);

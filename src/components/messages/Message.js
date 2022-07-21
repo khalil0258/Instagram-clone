@@ -11,11 +11,11 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+
 import { useLocation } from "react-router";
 import { object } from "yup";
-import { userDetail } from "../../features/auth-state/auth-slice";
-import { db } from "../../Firebase/Firebase";
+
+import { auth, db } from "../../Firebase/Firebase";
 import FriendMessage from "./FriendMessage";
 import MessageInput from "./MessageInput";
 import UserMessages from "./UserMessages";
@@ -24,16 +24,32 @@ function Message() {
   let location = useLocation();
   const [roomInfo, setRoomInfo] = useState({});
   const [messages, setMessages] = useState([]);
-
+  const [friendRoom, setFriendRoom] = useState({});
+  console.log(location.pathname.split("/", 3)[2]);
   const [pathName, setPathName] = useState(location.pathname.split("/", 3)[2]);
 
-  const user = useSelector(userDetail);
+  // const getRoom = async () => {
+  //   const room = await getDoc(doc(db, "users", pathName, "rooms", user.id));
+  //   return room.data();
+  // };
 
   const getUserRoom = useCallback(async () => {
-    const room = await getDoc(doc(db, "users", user.id, "rooms", pathName));
+    const room = await getDoc(
+      doc(db, "users", auth.currentUser.uid, "rooms", pathName)
+    );
     return room.data();
   }, [pathName]);
 
+  useEffect(() => {
+    let unsubscribe = onSnapshot(
+      doc(db, "users", pathName, "rooms", auth.currentUser.uid),
+      (querySnapshot) => {
+        setFriendRoom(querySnapshot.data());
+      }
+    );
+    console.log(friendRoom);
+    return unsubscribe;
+  }, []);
   //   this useEffect is for the messages rooms in the left
   useEffect(() => {
     // document.getElementById("messages").firstElementChild.scrollTo(0, 400);
@@ -45,7 +61,14 @@ function Message() {
   //  and this useEffect is for the messages section .it listen to the changes of the db and run every time we change anything in db
   useEffect(() => {
     const q = query(
-      collection(db, "users", user.id, "rooms", pathName, "messages"),
+      collection(
+        db,
+        "users",
+        pathName,
+        "rooms",
+        auth.currentUser.uid,
+        "messages"
+      ),
       orderBy("time", "asc")
     );
     let unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -59,23 +82,19 @@ function Message() {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    addVueStatement();
+  }, [messages?.length]);
+
   const addVueStatement = async () => {
-    let q = query(
-      doc(
-        db,
-        "users",
-        user.id,
-        "rooms",
-        pathName,
-        "messages",
-        messages[messages?.length - 1]?.id
-      )
-    );
-    await updateDoc(q, {
-      seen: true,
-    });
+    if (!!messages?.length) {
+      let q = doc(db, "users", auth.currentUser.uid, "rooms", pathName);
+
+      await updateDoc(q, {
+        seen: true,
+      });
+    }
   };
-  addVueStatement();
 
   return (
     <div>
@@ -101,15 +120,19 @@ function Message() {
             {/* messages container */}
             {messages.length === 0 ? (
               <div className="relative top-32 ">
-                <h2 className="text-2xl  font-medium font-sans space  ">{roomInfo?.userName}</h2>
-                <p className="font-thin text-sm text-global">Start Conversation</p>
+                <h2 className="text-2xl  font-medium font-sans space  ">
+                  {roomInfo?.userName}
+                </h2>
+                <p className="font-thin text-sm text-global">
+                  Start Conversation
+                </p>
               </div>
             ) : (
               <>
                 {Object.values(messages).map((message, index) => {
-                  console.log(message);
+                  // console.log(message);
 
-                  if (message?.senderId === user.id) {
+                  if (message?.senderId === auth.currentUser.uid) {
                     return (
                       <UserMessages
                         key={index}
@@ -117,7 +140,7 @@ function Message() {
                         seen={message?.seen}
                         senderId={pathName}
                         type={message?.type}
-                        userId={user.id}
+                        userId={auth.currentUser.uid}
                         message={message?.message}
                         time={new Date(message?.time?.toDate()).toUTCString()}
                         length={messages?.length - 1}
@@ -130,7 +153,7 @@ function Message() {
                         index={index}
                         seen={message?.seen}
                         photoURL={roomInfo?.photoURL}
-                        userId={user.id}
+                        userId={auth.currentUser.uid}
                         senderId={pathName}
                         type={message?.type}
                         message={message?.message}
@@ -141,8 +164,15 @@ function Message() {
                 })}
               </>
             )}
+            {friendRoom?.seen &&
+            messages[messages?.length - 1]?.senderId ===
+              auth.currentUser.uid ? (
+              <span className="text-right pr-2 font-medium text-[12px] text-global">
+                VU
+              </span>
+            ) : null}
           </div>
-          <MessageInput user={user} pathName={pathName} />
+          <MessageInput user={auth.currentUser} pathName={pathName} />
         </div>
       </div>
     </div>

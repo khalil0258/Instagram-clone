@@ -2,21 +2,21 @@ import React, { useEffect, useState } from "react";
 import Post from "./Post";
 import Instagram from "../../assets/icons/Instagram-13.svg";
 import { list, ref } from "firebase/storage";
-import { db, storage } from "../../Firebase/Firebase";
+import { auth, db, storage } from "../../Firebase/Firebase";
 import { useSelector } from "react-redux";
 import { userDetail } from "../../features/auth-state/auth-slice";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
 function Posts() {
-  const user = useSelector(userDetail);
+
   const [showLoadingIcon, setShowLoadinIcon] = useState(false);
   const [postss, setPostss] = useState([]);
   useEffect(() => {
     const fetch = async () => {
-      const userInfos = await getDoc(doc(db, "users", user.id));
+      const userInfos = await getDoc(doc(db, "users", auth.currentUser.uid));
       // console.log(userInfos.data());
       let following = [...userInfos.data().followed];
-      following.push(user.id);
+      following.push(auth.currentUser.uid);
       let AllPosts = [];
       await Promise.all(
         following?.map(async (foll) => {

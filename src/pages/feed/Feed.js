@@ -2,8 +2,7 @@ import { signOut } from "firebase/auth";
 import React, { useCallback, useEffect, useState } from "react";
 import { auth, db } from "../../Firebase/Firebase";
 import Header from "../../components/global/Header";
-import { useSelector } from "react-redux";
-import { userDetail } from "../../features/auth-state/auth-slice";
+
 import Posts from "../../components/Posts/Posts";
 import Suggested from "../../components/Suggested";
 import { doc, getDoc } from "firebase/firestore";
@@ -11,14 +10,14 @@ import HeaderHolder from "../../components/global/HeaderHolder";
 // import Post from "../../components/Posts/Post";
 
 function Feed() {
-  const user = useSelector(userDetail);
+  
   const [userData, setUserData] = useState({});
   // console.log("user", user);
   const fetchData = useCallback(async () => {
-    const userData = await getDoc(doc(db, "users", user.id));
+    const userData = await getDoc(doc(db, "users", auth.currentUser.uid));
     // console.log("doc", userData);
     return { ...userData.data() };
-  }, [user.id]);
+  }, [auth.currentUser.uid]);
   useEffect(() => {
     fetchData()
       .then((res) => {
@@ -44,7 +43,7 @@ function Feed() {
           <div className="py-2  flex justify-between items-center">
             <div className="flex gap-3 items-center ">
               <img
-                src={user.photoURL}
+                src={auth.currentUser.photoURL}
                 alt="profile image"
                 className="h-[60px] w-[60px] rounded-full cursor-pointer"
               />

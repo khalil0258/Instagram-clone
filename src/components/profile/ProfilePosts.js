@@ -6,8 +6,7 @@ import {
   query,
 } from "firebase/firestore";
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { userDetail } from "../../features/auth-state/auth-slice";
+
 import { db, storage } from "../../Firebase/Firebase";
 import { HeaderContainer } from "../global/ContainerSignup";
 // import { getDownloadURL, ref } from "firebase/storage";
@@ -20,7 +19,7 @@ function ProfilePosts({ infos, userState }) {
   const [profileStat, setProfileStat] = useState({
     post: "post",
   });
-  const user = useSelector(userDetail);
+
   console.log(profileStat.post || profileStat.tagged || profileStat.saved);
   useEffect(() => {
     const fetchProfileInfos = async () => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { userDetail } from "../../features/auth-state/auth-slice";
+import { auth } from "../../Firebase/Firebase";
 
 import MenuModal from "./MenuModal";
 function ProfileIcon() {
@@ -9,7 +9,7 @@ function ProfileIcon() {
   const clicked = () => {
     setShowMenu(false);
   };
-  const user = useSelector(userDetail);
+
   // console.log(user);
   return (
     <div className="">
@@ -22,13 +22,15 @@ function ProfileIcon() {
           setShowMenu(!showMenu);
         }}
       >
-        
-          {user?.photoURL ? (
-            <img src={user.photoURL} alt="" className="h-7 w-7 rounded-3xl" />
-          ) : (
-            <div className="h-7 w-7 rounded-3xl bg-gray-100"></div>
-          )}
-       
+        {auth.currentUser?.photoURL ? (
+          <img
+            src={auth.currentUser.photoURL}
+            alt=""
+            className="h-7 w-7 rounded-3xl"
+          />
+        ) : (
+          <div className="h-7 w-7 rounded-3xl bg-gray-100"></div>
+        )}
       </div>
 
       <MenuModal open={showMenu} clicked={clicked} />

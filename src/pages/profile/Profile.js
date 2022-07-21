@@ -12,7 +12,7 @@ import {
   setProfileId,
   userId,
 } from "../../features/profileSlice/Profile-Slice";
-import { db } from "../../Firebase/Firebase";
+import { auth, db } from "../../Firebase/Firebase";
 
 function Profile() {
   const [userState, setUserState] = useState(false);
@@ -21,7 +21,7 @@ function Profile() {
   const userId2 = useSelector(userId);
 
   const loading = useSelector(loading2);
-  const user = useSelector(userDetail);
+
   // console.log(userId2, loading);
   const dispatch = useDispatch();
   // ................
@@ -34,11 +34,11 @@ function Profile() {
   };
   // this use effect to know if the profile we are in is the userProfile or an other profile ( followed /infollowed)
   useEffect(() => {
-    if (userId2 === user.id) {
+    if (userId2 === auth.currentUser.uid) {
       // here we see if the profile match the user
       setUserState(true);
 
-      fetchUsers(user.id).then((res) => {
+      fetchUsers(auth.currentUser.uid).then((res) => {
         setUserInfos(res);
         // console.log(userInfos);
 
@@ -55,7 +55,7 @@ function Profile() {
         console.log(userInfos);
 
         // checking if  the user followers includes the user id
-        if (res?.followers.includes(user.id)) {
+        if (res?.followers.includes(auth.currentUser.uid)) {
           setFollowed(true);
           console.log("true");
         } else {
