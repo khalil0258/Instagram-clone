@@ -5,6 +5,7 @@ import { db } from "../../Firebase/Firebase";
 import { BackDrop } from "../global/MenuModal";
 
 function Unfollow(props) {
+  console.log("jj", props.id);
   if (!props.open) return null;
   else {
     return (
@@ -28,6 +29,8 @@ function Unfollow(props) {
   }
 }
 const UnfollowModel = (props) => {
+  console.log("uid", props.user.uid);
+  console.log(props.id);
   return (
     <div
       className="bg-white h-[50vh] w-1/3  fixed left-1/3 top-1/3 text-center rounded-md   "

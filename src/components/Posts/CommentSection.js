@@ -7,8 +7,9 @@ import CommentBefore from "./CommentBefore";
 
 function CommentSection(props) {
   const [comments, setComments] = useState([]);
-  let commentsLength;
-  const [leng, setLeng] = useState();
+  let commentsLength = 0;
+
+  const [length, setLength] = useState(0);
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -27,6 +28,8 @@ function CommentSection(props) {
           ),
           (querySnapshot) => {
             let com = [];
+            setLength(0);
+            commentsLength = 0;
 
             // console.log(querySnapshot.docs[0].data());
             querySnapshot.docs.forEach((q) => {
@@ -41,11 +44,22 @@ function CommentSection(props) {
               });
             });
             setComments(com);
+
+            // console.log(typeof com);
+            Object.values(com).forEach((c) => {
+              // console.log(c);
+
+              commentsLength = commentsLength + c.replies;
+            });
+            // commentsLength += com.length;
+            commentsLength = commentsLength + com?.length;
+            console.log(commentsLength);
+            setLength(commentsLength);
+            // console.log(typeof commentsLength);
           }
         )
       );
     };
-
     fetchComments();
   }, []);
 
@@ -60,7 +74,7 @@ function CommentSection(props) {
         }}
       >
         {/* in process */}
-        voir les 3 commentaires
+        {!!length && `voir les ${length} commentaires`}
       </div>
       <div>
         {!!comments.length && (

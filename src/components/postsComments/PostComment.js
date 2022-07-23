@@ -136,10 +136,14 @@ const PostSection = (props) => {
           );
         })
         .then(() => {
+          updateDoc(doc(db, "users", props.id, "posts", props.postId), {
+            comments: increment(1),
+          });
+        })
+        .then(() => {
           setText("");
         });
     } else {
-      console.log("helllllllllllllll", props);
       if (text.trim() != "")
         addDoc(
           collection(db, "users", props.id, "posts", props.postId, "comments"),
@@ -152,9 +156,15 @@ const PostSection = (props) => {
             likes: 0,
             replies: 0,
           }
-        ).then(() => {
-          setText("");
-        });
+        )
+          .then(() => {
+            updateDoc(doc(db, "users", props.id, "posts", props.postId), {
+              comments: increment(1),
+            });
+          })
+          .then(() => {
+            setText("");
+          });
     }
   };
   const tag = (value) => {
@@ -178,17 +188,17 @@ const PostSection = (props) => {
       <div className="w-1/2  h-full relative ">
         {/* profile of the post user  */}
         <div className="flex items-center justify-start h-[10vh] w-full px-4 border-b shadow-md ">
-          <div className="flex items-start justify-start  gap-2">
+          <div className="flex items-center justify-start  gap-2">
             <img
               src={props?.profileURL || require("../../assets/profile.png")}
               alt="profile img"
               className="rounded-full h-10 w-10"
             />
-            <div className=" flex flex-col items-center justify-start ">
-              <p className="font-medium">{props.userName}</p>
+            <div className=" flex flex-col items-center justify-center ">
+              <p className="font-medium text-sm">{props.userName}</p>
               <span>{props.location}</span>
             </div>
-            <p className="font-medium">abonne</p>
+            <p className="font-medium font-medium text-sm ">.Abonne(e)</p>
           </div>
         </div>
         {/* description and comments  */}

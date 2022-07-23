@@ -7,13 +7,7 @@ function FriendMessage(props) {
   const [img, setImg] = useState("");
   const messageLast = useRef("");
   useEffect(() => {
-    // if (props.index === props.length) {
 
-    //   messageLast.current.scrollIntoView({
-    //     behavior: "smooth",
-    //     block: "start",
-    //   });
-    // }
     if (props.type === "image") {
       getDownloadURL(
         ref(

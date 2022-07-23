@@ -2,7 +2,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import React, { useRef, useState } from "react";
 
-import {  useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { auth, db, storage } from "../../../Firebase/Firebase";
 import { v4 as uuidv4 } from "uuid";
@@ -19,11 +19,17 @@ function EditPro() {
   const changeThing = async (thing, element) => {
     if (thing === "image") {
       await uploadBytes(
-        ref(storage, `users/ ${auth.currentUser.uid}/ profile/ ${idGenerated}.jpg`),
+        ref(
+          storage,
+          `users/ ${auth.currentUser.uid}/ profile/ ${idGenerated}.jpg`
+        ),
         element
       ).then(async () => {
         getDownloadURL(
-          ref(storage, `users/ ${auth.currentUser.uid}/ profile/ ${idGenerated}.jpg`)
+          ref(
+            storage,
+            `users/ ${auth.currentUser.uid}/ profile/ ${idGenerated}.jpg`
+          )
         )
           .then(async (url) => {
             await updateDoc(doc(db, "users", auth.currentUser.uid), {
@@ -56,7 +62,10 @@ function EditPro() {
         {/* profile image container  */}
         <div className="flex items-center justify-center gap-6 text-left">
           <img
-            src={auth.currentUser.photoURL || require("../../../assets/profile.png")}
+            src={
+              auth.currentUser.photoURL ||
+              require("../../../assets/profile.png")
+            }
             alt="profile img"
             className="h-12 w-12 rounded-full "
           />

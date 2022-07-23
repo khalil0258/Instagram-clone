@@ -55,6 +55,7 @@ function DescriptionSection(props) {
               description: description || "",
               location: inputPlace || "",
               time: new serverTimestamp(),
+              comments: 0,
             }
           ).then(() => {
             alert("imgAdded");

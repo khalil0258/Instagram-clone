@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import PostSetingsModal from "./PostSetingsModal";
+import { setProfileId } from "../../features/profileSlice/Profile-Slice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
 
 function PostName(props) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showPostSetingsPortal, setShowPostSetingsPortal] = useState(false);
   const clicked = () => {
     setShowPostSetingsPortal(false);
@@ -10,7 +15,13 @@ function PostName(props) {
   return (
     <div className="flex px-3  items-center justify-between py-2">
       {/* this is the profile img and the profile name  */}
-      <div className="flex items-center">
+      <div
+        className="flex items-center"
+        onClick={() => {
+          dispatch(setProfileId({ id: props?.id }));
+          navigate(`/${props?.userName}`);
+        }}
+      >
         <img
           src={props.photoURL || require("../../assets/profile.png")}
           alt="profileImg"

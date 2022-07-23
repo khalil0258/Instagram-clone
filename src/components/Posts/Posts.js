@@ -8,7 +8,6 @@ import { userDetail } from "../../features/auth-state/auth-slice";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
 function Posts() {
-
   const [showLoadingIcon, setShowLoadinIcon] = useState(false);
   const [postss, setPostss] = useState([]);
   useEffect(() => {

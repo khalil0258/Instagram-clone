@@ -1,17 +1,12 @@
-import {
-  collection,
-  getDoc,
-  getDocs,
-  orderBy,
-  query,
-} from "firebase/firestore";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 
 import { db, storage } from "../../Firebase/Firebase";
 import { HeaderContainer } from "../global/ContainerSignup";
 // import { getDownloadURL, ref } from "firebase/storage";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ModeCommentIcon from "@mui/icons-material/ModeComment";
+
+import PostComment from "../postsComments/PostComment";
+import PostsPro from "./PostsPro";
 function ProfilePosts({ infos, userState }) {
   const [postss, setPostss] = useState([]);
   console.log("infos", infos);
@@ -31,7 +26,7 @@ function ProfilePosts({ infos, userState }) {
       let posts = await getDocs(q);
 
       posts.forEach((element) => {
-        postsArray.push(element.data());
+        postsArray.push({ id: element.id, ...element.data() });
       });
       return postsArray;
     };
@@ -91,38 +86,13 @@ function ProfilePosts({ infos, userState }) {
             id="posts"
             className="text-center capitalize font-sans font-medium text-xl relative top-12"
           >
-            no posts
+            No posts
           </div>
         )}
-        <div className="flex  items-start justify-between gap-y-2 flex-wrap pb-24 ">
+        <div className="flex  items-start justify-start gap-8 flex-wrap pb-24 ">
           {!!profileStat.post &&
             postss.length != 0 &&
-            postss?.map((post) => (
-              <div className="w-[293px]  h-[293px] cursor-pointer relative">
-                <img
-                  src={post.imageUrl}
-                  alt="profile Post"
-                  className="h-full w-full object-cover"
-                />
-
-                <div
-                  className="w-full h-full hover:bg-slate-900 hover:text-white text-transparent absolute top-0 right-0 flex justify-center items-center "
-                  style={{ opacity: "0.4", zIndex: 80 }}
-                >
-                  <div className="flex gap-12 items-center">
-                    <div className="flex gap-1 ">
-                      <FavoriteIcon />
-                      {post.likes.length}
-                    </div>
-                    <div className="flex gap-1 ">
-                      <ModeCommentIcon />
-                      {/* comments length? */}
-                      {/* {post.likes.length} */}1
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+            postss?.map((post) => <PostsPro id={infos?.userId} post={post} />)}
         </div>
       </div>
     </HeaderContainer>

@@ -89,7 +89,8 @@ function CommentsReveal(props) {
         </div>
       </div>
       {/* this is the sub comments section  */}
-      {props.main.replies && (
+
+      {!!props.main.replies && (
         <div
           className="text-gray-600 mt-2 ml-8 hover:text-gray-700 cursor-pointer  text-sm"
           onClick={() => {
@@ -102,6 +103,7 @@ function CommentsReveal(props) {
           {props?.main.replies})
         </div>
       )}
+
       {showReplies && !!replies?.length && (
         <div>
           {replies.map((rep, index) => (

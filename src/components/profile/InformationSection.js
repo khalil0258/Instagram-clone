@@ -191,7 +191,7 @@ const Followed = (props) => {
         clicked={clicked}
         img={props.img}
         FollowChanger={props.FollowChanger}
-        id={props.id}
+        id={props.infos.userId}
         user={props.user}
       />
     </div>

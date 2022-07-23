@@ -11,10 +11,9 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
-
-import { useLocation } from "react-router";
-import { object } from "yup";
-
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router";
+import { setProfileId } from "../../features/profileSlice/Profile-Slice";
 import { auth, db } from "../../Firebase/Firebase";
 import FriendMessage from "./FriendMessage";
 import MessageInput from "./MessageInput";
@@ -22,6 +21,8 @@ import UserMessages from "./UserMessages";
 
 function Message() {
   let location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [roomInfo, setRoomInfo] = useState({});
   const [messages, setMessages] = useState([]);
   const [friendRoom, setFriendRoom] = useState({});
@@ -102,7 +103,14 @@ function Message() {
         <div className="py-2 cursor-pointer border-b w-full">
           {/* ..................... */}
           {/* header section  */}
-          <div className="flex px-3 gap-2 items-center ">
+
+          <div
+            className="flex px-3 gap-2 items-center "
+            onClick={() => {
+              dispatch(setProfileId({ id: roomInfo?.id }));
+              navigate(`/${roomInfo?.userName}`);
+            }}
+          >
             <img
               src={roomInfo?.photoURL || require("../../assets/profile.png")}
               alt="profile img"

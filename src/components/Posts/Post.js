@@ -21,6 +21,7 @@ function Post(props) {
     <div className="w-full bg-white mb-5 border border-opacity-30  border-slate-500">
       {/* the first section :the name and profile img  */}
       <PostName
+        id={props.post?.userId}
         userName={props?.post?.userName}
         profileURL={props?.post?.profileImg}
         location={props?.post?.location}
